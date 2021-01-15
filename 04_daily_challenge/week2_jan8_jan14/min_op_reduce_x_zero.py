@@ -26,6 +26,9 @@
 # 1 <= nums[i] <= 104
 # 1 <= x <= 109
 
+# reference solution, useful
+# https://leetcode.com/discuss/explore/january-leetcoding-challenge-2021/1017236/minimum-operations-to-reduce-x-to-zero-js-explanation-beats-100
+
 from typing import List
 
 
