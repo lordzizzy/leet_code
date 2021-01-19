@@ -37,8 +37,11 @@ class Solution:
             # for the case of aa
             n2 = self.expand(s, i, i+1)
 
+            # select whichever is the biggest
             n = max(n1, n2)
-            if n > end - start:
+
+            # calculate start and end based on shifted n from where i (center) is
+            if n > (end - start):
                 start = i - (n-1)//2
                 end = i + n//2
 
@@ -46,12 +49,10 @@ class Solution:
 
     def expand(self, s: str, left: int, right: int) -> int:
         n = len(s)
-        L = left
-        R = right
-        while L >= 0 and R < n and s[L] == s[R]:
-            L -= 1
-            R += 1
-        return R - L - 1
+        while left >= 0 and right < n and s[left] == s[right]:
+            left -= 1
+            right += 1
+        return right - left - 1
 
 
 def checkSolution(s: str, expected: str):
