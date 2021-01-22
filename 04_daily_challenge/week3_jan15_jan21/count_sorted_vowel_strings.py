@@ -26,6 +26,8 @@
 # Constraints:
 # 1 <= n <= 50
 
+from termcolor import colored
+
 
 class Solution:
     def __init__(self):
@@ -57,14 +59,24 @@ class Solution:
         return total + 1
 
 
-def checkSolution(n: int, expected: int):
+def test_Solution(n: int, expected: int):
     s = Solution()
     count = s.countVowelStrings(n)
-    assert count == expected, \
-        f"count: {count} but expected: {expected}"
+    if count == expected:
+        print(colored(
+            f"PASSED - Vowel string count for size {n} is {count}", "green"))
+    else:
+        print(colored(
+            f"FAILED - Vowel string count for size {n} is {count} but expected {expected}", "red"))
 
 
 if __name__ == "__main__":
-    checkSolution(n=1, expected=5)
-    checkSolution(n=2, expected=15)
-    checkSolution(n=33, expected=66045)
+    # default solution using dict for cache
+    test_Solution(n=1, expected=5)
+    test_Solution(n=2, expected=15)
+    test_Solution(n=3, expected=35)
+    test_Solution(n=4, expected=70)
+    test_Solution(n=5, expected=126)
+    test_Solution(n=6, expected=210)
+    test_Solution(n=7, expected=330)
+    test_Solution(n=33, expected=66045)
