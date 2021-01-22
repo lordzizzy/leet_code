@@ -44,6 +44,10 @@
 # 1 <= word1.length, word2.length <= 10^5
 # word1 and word2 contain only lowercase English letters.
 
+# class Solution:
+#     def closeStrings(self, word1: str, word2: str) -> bool:
+#         return sorted(collections.Counter(word1).values())==sorted(collections.Counter(word2).values()) and set(word1)==set(word2)
+
 from termcolor import colored
 
 
@@ -62,7 +66,7 @@ class Solution:
         values1.sort()
         values2 = list(map2.values())
         values2.sort()
-        
+
         # for any operation 2s, the unordered numbers in the value list must be the same        
         r2 = values1 == values2
 
