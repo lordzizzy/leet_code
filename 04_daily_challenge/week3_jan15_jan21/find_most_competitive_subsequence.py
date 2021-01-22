@@ -20,25 +20,37 @@
 # 0 <= nums[i] <= 10^9
 # 1 <= k <= nums.length
 
+# credits goes to the super guy person who did this:
+# https://leetcode.com/problems/find-the-most-competitive-subsequence/discuss/1027495/Python-Stack-solution-explained
+
 from typing import List
+from termcolor import colored
 
 
 class Solution:
-    def mostCompetitive(self, nums: List[int], k: int) -> List[int]:
-        pass
+    def mostCompetitive(self, nums, k):
+        attempts = len(nums) - k
+        stack = []
+        for num in nums:
+            while stack and num < stack[-1] and attempts > 0:
+                stack.pop()
+                attempts -= 1
+            stack.append(num)
+
+        return stack[:k]
 
 
-def checkSolution(nums: List[int], k: int, expected: List[int]):
+def test_Solution(nums: List[int], k: int, expected: List[int]):
     sln = Solution()
     r = sln.mostCompetitive(nums, k)
     if r == expected:
         print(
             f"PASSED - most competitive subsquence for {nums} with k={k} is {r}")
     else:
-        print(
-            f"FAILED - most competitive subsquence for {nums} with k={k} is {r} but expected {expected}")
+        print(colored(
+            f"FAILED - most competitive subsquence for {nums} with k={k} is {r} but expected {expected}", "red"))
 
 
 if __name__ == '__main__':
-    checkSolution(nums=[3, 5, 2, 6], k=2, expected=[2, 6])
-    checkSolution(nums=[2,4,3,3,5,4,9,6], k=4, expected=[2,3,3,4])
+    # test_Solution(nums=[3, 5, 2, 6], k=2, expected=[2, 6])
+    test_Solution(nums=[2, 4, 3, 3, 5, 4, 9, 6], k=4, expected=[2, 3, 3, 4])
