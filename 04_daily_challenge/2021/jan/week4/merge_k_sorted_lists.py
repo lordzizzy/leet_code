@@ -83,7 +83,7 @@ class Solution:
         return dummy.next
 
 
-def toListOfListNodes(input: List[List[int]]) -> List[ListNode]:
+def listNumsToListNodes(input: List[List[int]]) -> List[ListNode]:
     if not input or len(input) == 0:
         return None
 
@@ -102,18 +102,7 @@ def toListOfListNodes(input: List[List[int]]) -> List[ListNode]:
     return result
 
 
-def toListOfNums(nodes: List[ListNode]) -> List[List[int]]:
-    result = []
-    for node in nodes:
-        nums = []
-        while node:
-            nums.append(node.val)
-            node = node.next
-        result.append(nums)
-    return result
-
-
-def toListOfNums(node: ListNode) -> List[int]:
+def listNodeToListNums(node: ListNode) -> List[int]:
     nums = []
     while node:
         nums.append(node.val)
@@ -122,8 +111,8 @@ def toListOfNums(node: ListNode) -> List[int]:
 
 
 def test_toListOfListNodes(lists: List[List[int]]):
-    nodes = toListOfListNodes(lists)
-    if toListOfNums(nodes) == lists:
+    nodes = listNumsToListNodes(lists)
+    if listNodeToListNums(nodes) == lists:
         print(colored(f"PASSED.", "green"))
     else:
         print(colored(f"FAILED.", "red"))
@@ -132,8 +121,8 @@ def test_toListOfListNodes(lists: List[List[int]]):
 def test_Solution(input: List[List[int]], expected: List[int]):
     # convert input into List of ListNodes
     sln = Solution()
-    r = sln.mergeKLists(toListOfListNodes(input))
-    if toListOfNums(r) == expected:
+    r = sln.mergeKLists(listNumsToListNodes(input))
+    if listNodeToListNums(r) == expected:
         print(colored(f"PASSED - merged {input} into {r}", "green"))
     else:
         print(
