@@ -35,7 +35,7 @@
 # dp=[0]
 # mod = 1000000000 + 7
 # class Solution:
-#     def concatenatedBinary(self, n: int) -> int:    
+#     def concatenatedBinary(self, n: int) -> int:
 #         if n>len(dp)-1:
 #             ans = dp[len(dp)-1]
 #             l = floor(log2(len(dp)))+1
@@ -47,32 +47,67 @@
 #                 if (i & (i+1))==0: l+=1
 #         return dp[n]
 
-from typing import Generator
+# best bit-shifting solution 44ms python
+# https://leetcode.com/problems/concatenation-of-consecutive-binary-numbers/discuss/1037348/Python-3-Bit-manipulation-4-solutions-1-line-O(n)-44ms
+
+
+from typing import Callable, Generator
+from typing import List
 from termcolor import colored
+from math import floor, log2
 
 
 class Solution:
+    def __init__(self) -> None:
+        self._cache: List[int] = [0]
+
     def concatenatedBinary(self, n: int) -> int:
+        # return self.concat_binary_chau_keng(n)
+        return self.concat_binary_bitshift(n)
+
+    def concat_binary_chau_keng(self, n: int) -> int:
         def genBinaryStr(n: int) -> Generator[str, None, None]:
             for i in range(1, n+1):
-                yield f"{i:b}"            
-        
+                yield f"{i:b}"
         bstr: str = "".join(genBinaryStr(n))
         ans = int(bstr, base=2) % int(1e9+7)
         return ans
 
+    def concat_binary_bitshift(self, n: int) -> int:
+        cache_size: int = len(self._cache)
+        if n < cache_size:
+            return self._cache[n]
+        limit: int = int(1e9+7)
+        ans: int = self._cache[-1]
+        shift: int = floor(log2(cache_size))+1
+        for i in range(cache_size, n+1):
+            ans <<= shift
+            ans %= limit
+            ans += i
+            self._cache.append(ans)
+            # if we are about to overflow in the next iteration
+            # then add 1 to shift, eg. 1, 11, 111
+            if (i & (i+1)) == 0:
+                shift += 1
+        return ans
+
 
 def test_concatenatedBinary(n: int, expected: int):
+    def test_impl(func: Callable[[int], int], n: int, expected: int):
+        r = func(n)
+        if r == expected:
+            print(colored(
+                f"PASSED =>({func.__name__}) 1 to {n} concatenated binary mod 10^9+7's decimal value is: {r}", "green"))
+        else:
+            print(colored(
+                f"FAILED =>({func.__name__}) 1 to {n} concatenated binary mod 10^9+7's decimal value is: {r}, but expected {expected}", "red"))
+
     sln = Solution()
-    r = sln.concatenatedBinary(n)
-    if r == expected:
-        print(colored(
-            f"PASSED => 1 to {n} concatenated binary mod 10^9+7's decimal value is: {r}", "green"))
-    else:
-        print(colored(
-            f"FAILED => 1 to {n} concatenated binary mod 10^9+7's decimal value is: {r}, but expected {expected}", "red"))
+    test_impl(sln.concat_binary_chau_keng, n, expected)
+    test_impl(sln.concat_binary_bitshift, n, expected)
 
 
 if __name__ == "__main__":
     test_concatenatedBinary(n=1, expected=1)
     test_concatenatedBinary(n=3, expected=27)
+    test_concatenatedBinary(n=12, expected=505379714)
