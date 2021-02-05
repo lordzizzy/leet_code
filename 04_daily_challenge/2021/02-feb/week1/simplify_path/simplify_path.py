@@ -45,7 +45,6 @@ class Solution:
     def simplifyPath(self, path: str) -> str:
         stack = []
         for token in path.split("/"):
-            print(token)
             if token in ("", "."):
                 pass
             elif token in "..":
