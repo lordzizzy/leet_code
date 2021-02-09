@@ -34,83 +34,37 @@
 # All the values in the tree are unique.
 # root is guaranteed to be a valid binary search tree.
 
-from __future__ import annotations
-from typing import Any, Callable, List
+import sys, os
+
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]), "../../../"))
+
+from typing import Any, Callable, List, Optional
 from termcolor import colored
-from collections import deque
 
+from shared import bst
 
-class TreeNode:
-    def __init__(self, val: int = 0, left: TreeNode = None, right: TreeNode = None):
-        self.val: int = val
-        self.left: TreeNode = left
-        self.right: TreeNode = right
-
-    def __str__(self) -> str:
-        return f"<{self.val} {self.left}, {self.right}>"
-
-
-def build_tree(nodes) -> TreeNode:
-    if not nodes:
-        return None
-    it = iter(nodes)
-    tree = TreeNode(next(it))
-    fringe = deque([tree])
-    while len(fringe) > 0:
-        head = fringe.popleft()
-        try:
-            l_val = next(it)
-            if l_val is not None:
-                head.left = TreeNode(l_val)
-                fringe.append(head.left)
-            r_val = next(it)
-            if r_val:
-                head.right = TreeNode(r_val)
-                fringe.append(head.right)
-        except StopIteration:
-            break
-    return tree
-
-
-def build_list(root: TreeNode):
-    if not root:
-        return []
-    lst = []
-    fringe = deque([root])
-    lst.append(root.val)
-    while len(fringe) > 0:
-        head = fringe.popleft()
-        if head.left:
-            lst.append(head.left.val)
-            fringe.append(head.left)
-        else:
-            lst.append(None)
-        if head.right:
-            lst.append(head.right.val)
-            fringe.append(head.right)
-        else:
-            lst.append(None)
-    return lst
+TreeNode = bst.TreeNode
 
 
 class Solution:
-    def convertBST(self, root: TreeNode) -> TreeNode:
+    def convertBST(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
         return self.convertBST_recursive(root)
 
-    def convertBST_recursive(self, root: TreeNode) -> TreeNode:
-        def visit(node: TreeNode):
-            if not node:
+    def convertBST_recursive(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        def visit(node: Optional[TreeNode]):
+            if node is None:
                 return
             nonlocal sum
             visit(node.right)
             sum += node.val
             node.val = sum
             visit(node.left)
+
         sum = 0
         visit(root)
         return root
 
-    def convertBST_iterative(self, root: TreeNode) -> TreeNode:
+    def convertBST_iterative(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
         sum = 0
         stack = []
         node = root
@@ -126,25 +80,54 @@ class Solution:
 
 
 def test_solution(nodes: List[Any], expected: List[Any]):
-    def test_impl(func: Callable[[TreeNode], TreeNode], nodes: List[Any], expected: List[Any]):
-        root = build_tree(nodes)
+    SolutionFunc = Callable[[Optional[TreeNode]], Optional[TreeNode]]
+
+    def test_impl(func: SolutionFunc, nodes: List[Any], expected: List[Any]):
+        root = bst.build_tree(nodes)
         r = func(root)
-        r_nodes = build_list(r)
-        e_nodes = build_list(build_tree(expected))
+        r_nodes = bst.build_list(r)
+        e_nodes = bst.build_list(bst.build_tree(expected))
         if r_nodes == e_nodes:
-            print(colored(
-                f"PASSED {func.__name__} => bst:{nodes} to greater tree is: {r_nodes}", "green"))
+            print(
+                colored(
+                    f"PASSED {func.__name__} => bst:{nodes} to greater tree is: {r_nodes}",
+                    "green",
+                )
+            )
         else:
-            print(colored(
-                f"FAILED {func.__name__} => bst:{nodes} to greater tree is: {r_nodes}, expected: {e_nodes}", "red"))
+            print(
+                colored(
+                    f"FAILED {func.__name__} => bst:{nodes} to greater tree is: {r_nodes}, expected: {e_nodes}",
+                    "red",
+                )
+            )
+
     sln = Solution()
-    test_impl(sln.convertBST, nodes, expected)
+    test_impl(sln.convertBST_recursive, nodes, expected)
     test_impl(sln.convertBST_iterative, nodes, expected)
 
 
 if __name__ == "__main__":
-    test_solution(nodes=[4, 1, 6, 0, 2, 5, 7, None, None, None, 3, None, None, None, 8], expected=[
-                  30, 36, 21, 36, 35, 26, 15, None, None, None, 33, None, None, None, 8])
+    test_solution(
+        nodes=[4, 1, 6, 0, 2, 5, 7, None, None, None, 3, None, None, None, 8],
+        expected=[
+            30,
+            36,
+            21,
+            36,
+            35,
+            26,
+            15,
+            None,
+            None,
+            None,
+            33,
+            None,
+            None,
+            None,
+            8,
+        ],
+    )
     test_solution(nodes=[0, None, 1], expected=[1, None, 1])
     test_solution(nodes=[1, 0, 2], expected=[3, 3, 2])
     test_solution(nodes=[3, 2, 4, 1], expected=[7, 9, 4, 10])
