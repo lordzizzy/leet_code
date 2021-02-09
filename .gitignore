@@ -1,3 +1,9 @@
 .vs/
 .vscode/
 [Oo]ut/
+
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
