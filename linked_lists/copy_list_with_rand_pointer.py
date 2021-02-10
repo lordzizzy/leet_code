@@ -66,6 +66,7 @@ class Solution:
     def copyRandomList(self, head: Optional[Node]) -> Optional[Node]:
         return self.copyRandomList_dict_lookup(head)
 
+    # https://leetcode.com/problems/copy-list-with-random-pointer/discuss/43485/Clear-and-short-python-O(2n)-and-O(n)-solution
     def copyRandomList_dict_lookup(self, head: Optional[Node]) -> Optional[Node]:
         if head is None:
             return None
