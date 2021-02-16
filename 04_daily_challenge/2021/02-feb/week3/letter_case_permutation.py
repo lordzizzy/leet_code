@@ -24,29 +24,6 @@
 # S will be a string with length between 1 and 12.
 # S will consist only of letters or digits.
 
-# class Solution:
-#     def letterCasePermutation(self, S: str) -> List[str]:
-#         results = [S]
-
-#         for i in range(len(S)):
-#             c = S[i]
-
-#             if '0' <= c <= '9':
-#                 continue
-
-#             n = len(results)
-#             for j in range(n):
-#                 s = results[j]
-
-#                 if 'a' <= c <= 'z':
-#                     new_C = c.upper()
-#                 else:
-#                     new_C = c.lower()
-
-#                 results.append(s[:i] + new_C + s[i+1:])
-
-#         return results
-
 from typing import Callable, Deque, List
 from termcolor import colored
 
@@ -76,7 +53,6 @@ class Solution:
                 perms = [p + c for p in perms]
             else:
                 perms = [p + ch for p in perms for ch in (c.lower(), c.upper())]
-            print(perms)
         return perms
 
 
@@ -102,12 +78,12 @@ def test_solution(S: str, expected: List[str]) -> None:
             )
 
     sln = Solution()
-    # test_impl(sln.letterCasePermutation_bfs, S, expected)
+    test_impl(sln.letterCasePermutation_bfs, S, expected)
     test_impl(sln.letterCasePermutation_build_from_base, S, expected)
 
 
 if __name__ == "__main__":
     test_solution(S="a1b2", expected=["a1b2", "a1B2", "A1b2", "A1B2"])
-    # test_solution(S="3z4", expected=["3z4", "3Z4"])
-    # test_solution(S="12345", expected=["12345"])
-    # test_solution(S="0", expected=["0"])
+    test_solution(S="3z4", expected=["3z4", "3Z4"])
+    test_solution(S="12345", expected=["12345"])
+    test_solution(S="0", expected=["0"])
