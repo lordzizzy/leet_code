@@ -1,17 +1,21 @@
 from __future__ import annotations
-from typing import Any, List, Optional
+from typing import List, Optional
 from collections import deque
 
 
 # Definition for a binary tree node.
 class TreeNode:
+    val: int
+    left: Optional[TreeNode]
+    right: Optional[TreeNode]
+
     def __init__(
         self,
         val: int = 0,
         left: Optional[TreeNode] = None,
         right: Optional[TreeNode] = None,
-    ):
-        self.val: int = val
+    ) -> None:
+        self.val = val
         self.left = left
         self.right = right
 
@@ -19,11 +23,14 @@ class TreeNode:
         return f"<{self.val} {self.left}, {self.right}>"
 
 
-def build_tree(nodes: List[Any]) -> Optional[TreeNode]:
-    if nodes:
+def build_tree(nodes: List[Optional[int]]) -> Optional[TreeNode]:
+    if not nodes:
         return None
     it = iter(nodes)
-    tree = TreeNode(next(it))
+    val = next(it)
+    if val is None:
+        raise AssertionError(f"First node's value cannot be None")
+    tree = TreeNode(val)
     fringe = deque([tree])
     while len(fringe) > 0:
         head = fringe.popleft()
@@ -41,7 +48,7 @@ def build_tree(nodes: List[Any]) -> Optional[TreeNode]:
     return tree
 
 
-def build_list(root: Optional[TreeNode]):
+def build_list(root: Optional[TreeNode]) -> List[Optional[int]]:
     if root is None:
         return []
     lst = []
