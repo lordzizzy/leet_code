@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6a9c70202f2d7302a8f0c8a5ebcce1e45cf12e4313ea318a79340b485f4fc833"
+            "sha256": "7e3e6cea34e532bb95a07dc539f55d5ea477ced717d05c9c9015965364c17c18"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,10 @@
         ]
     },
     "default": {
+        "leetcode-shared": {
+            "editable": true,
+            "path": "./leetcode_shared"
+        },
         "termcolor": {
             "hashes": [
                 "sha256:1d6d69ce66211143803fbc56652b41d73b4a400a2891d7bf7a1cdf4c02de613b"

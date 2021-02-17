@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 termcolor = "*"
+leetcode-shared = {editable = true, path = "./leetcode_shared"}
 
 [dev-packages]
 black = "*"
