@@ -1,96 +1,46 @@
 # https://leetcode.com/explore/challenge/card/february-leetcoding-challenge-2021/584/week-1-february-1st-february-7th/3630/
 
 # Binary Tree Right Side View
-# Given a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
+# Given a binary tree, imagine yourself standing on the right side of it,
+# return the values of the nodes you can see ordered from top to bottom.
 
 # Example:
 # Input: [1,2,3,None,5,None,4]
 # Output: [1, 3, 4]
 # Explanation:
-
 #    1            <---
 #  /   \
 # 2     3         <---
 #  \     \
 #   5     4       <---
 
-from typing import List
+from typing import Callable, List, Optional
 from termcolor import colored
-from collections import deque
+from shared import bst
 
-# Definition for a binary tree node.
-
-
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
-
-
-def build_tree(nodes) -> TreeNode:
-    if not nodes:
-        return None
-    it = iter(nodes)
-    tree = TreeNode(next(it))
-    fringe = deque([tree])
-    while len(fringe) > 0:
-        head = fringe.popleft()
-        try:
-            l_val = next(it)
-            if l_val is not None:
-                head.left = TreeNode(l_val)
-                fringe.append(head.left)
-            r_val = next(it)
-            if r_val:
-                head.right = TreeNode(r_val)
-                fringe.append(head.right)
-        except StopIteration:
-            break
-    return tree
-
-
-def build_list(root: TreeNode):
-    if not root:
-        return []
-    lst = []
-    fringe = deque([root])
-    lst.append(root.val)
-    while len(fringe) > 0:
-        head = fringe.popleft()
-        if head.left:
-            lst.append(head.left.val)
-            fringe.append(head.left)
-        else:
-            lst.append(None)
-        if head.right:
-            lst.append(head.right.val)
-            fringe.append(head.right)
-        else:
-            lst.append(None)
-    return lst
+TreeNode = bst.TreeNode
 
 
 class Solution:
-    def rightSideView(self, root: TreeNode) -> List[int]:
+    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
         return self.rightSideView_recursive(root)
 
-    def rightSideView_recursive(self, root: TreeNode) -> List[int]:
-        def dfs(root: TreeNode, depth: int):
+    def rightSideView_recursive(self, root: Optional[TreeNode]) -> List[int]:
+        def dfs(root: Optional[TreeNode], depth: int):
             if not root:
                 return
             if depth >= len(res):
                 res.append(root.val)
-            dfs(root.right, depth+1)
-            dfs(root.left, depth+1)
+            dfs(root.right, depth + 1)
+            dfs(root.left, depth + 1)
 
         res = []
         dfs(root, 0)
         return res
 
-    def rightSideView_iterative(self, root: TreeNode) -> List[int]:
+    def rightSideView_iterative(self, root: Optional[TreeNode]) -> List[int]:
         res: List[int] = []
-        cur_level: List[TreeNode] = [root] if root else None
+        cur_level: List[TreeNode] = [root] if root else []
 
         while cur_level:
             res.append(cur_level[-1].val)
@@ -104,16 +54,28 @@ class Solution:
         return res
 
 
-def test_solution(nodes: List[int], expected: List[int]):
-    def test_impl(func, nodes, expected):
-        root = build_tree(nodes)
+SolutionFunc = Callable[[Optional[TreeNode]], List[int]]
+
+
+def test_solution(nodes: List[Optional[int]], expected: List[int]):
+    def test_impl(func: SolutionFunc, nodes: List[Optional[int]], expected: List[int]):
+        root = bst.build_tree(nodes)
         r = func(root)
         if r == expected:
             print(
-                colored(f"PASS {func.__name__} => tree: {nodes} right side view: {r}", "green"))
+                colored(
+                    f"PASS {func.__name__} => tree: {nodes} right side view: {r}",
+                    "green",
+                )
+            )
         else:
-            print(colored(
-                f"FAILED {func.__name__} => tree: {nodes} right side view: {r}, but expected: {expected}", "red"))
+            print(
+                colored(
+                    f"FAILED {func.__name__} => tree: {nodes} right side view: {r}, but expected: {expected}",
+                    "red",
+                )
+            )
+
     sln = Solution()
     test_impl(sln.rightSideView_recursive, nodes, expected)
     test_impl(sln.rightSideView_iterative, nodes, expected)
