@@ -46,7 +46,6 @@
 # multiply or to decrement.
 
 
-
 # Approach 1: Work Backwards
 # Intuition
 # Instead of multiplying by 2 or subtracting 1 from X, we could divide by 2
@@ -88,6 +87,14 @@ class Solution:
                 y //= 2
         return count + (x - y)
 
+    def brokenCalc_recursion(self, x: int, y: int) -> int:
+        if x >= y:
+            return x - y
+        if y % 2:
+            return 1 + self.brokenCalc_recursion(x, y + 1)
+        else:
+            return 1 + self.brokenCalc_recursion(x, y // 2)
+
 
 SolutionFunc = Callable[[int, int], int]
 
@@ -112,6 +119,7 @@ def test_solution(X: int, Y: int, expected: int):
 
     sln = Solution()
     test_impl(sln.brokenCalc_work_backwards, X, Y, expected)
+    test_impl(sln.brokenCalc_recursion, X, Y, expected)
 
 
 if __name__ == "__main__":
