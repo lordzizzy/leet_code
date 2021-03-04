@@ -37,41 +37,27 @@
 # -10000 <= Node.val <= 10000
 # Node.random is None or is pointing to some node in the linked list.
 
-from __future__ import annotations
+
 from typing import DefaultDict, Optional, List
 from termcolor import colored
 
-# Definition for a Node.
-class Node:
-    def __init__(
-        self, x: int, next: Optional[Node] = None, random: Optional[Node] = None
-    ):
-        self.val = x
-        self.next = next
-        self.random = random
-
-    def __repr__(self) -> str:
-        res = ""
-        head = self
-        while head:
-            if head.next:
-                res += f"(val:{head.val}, rand:{id(head.random) if head.random else None})-->"
-            else:
-                res += f"(val:{head.val}, rand:{id(head.random) if head.random else None})-->None"
-            head = head.next
-        return res
+from shared.linked_list import ListNode, NodeList, build_linked_list, build_node_list
 
 
 class Solution:
-    def copyRandomList(self, head: Optional[Node]) -> Optional[Node]:
+    def copyRandomList(self, head: Optional[ListNode]) -> Optional[ListNode]:
         return self.copyRandomList_dict_lookup(head)
 
     # https://leetcode.com/problems/copy-list-with-random-pointer/discuss/43485/Clear-and-short-python-O(2n)-and-O(n)-solution
-    def copyRandomList_dict_lookup(self, head: Optional[Node]) -> Optional[Node]:
+    def copyRandomList_dict_lookup(
+        self, head: Optional[ListNode]
+    ) -> Optional[ListNode]:
         if head is None:
             return None
 
-        lookup = DefaultDict[Optional[Node], Optional[Node]](lambda: Node(0))
+        lookup = DefaultDict[Optional[ListNode], Optional[ListNode]](
+            lambda: ListNode(0)
+        )
         lookup[None] = None
         old = head
 
@@ -83,16 +69,16 @@ class Solution:
 
         return lookup[head]
 
-    def copyRandomList_arr_lookup(self, head: Optional[Node]) -> Optional[Node]:
+    def copyRandomList_arr_lookup(self, head: Optional[ListNode]) -> Optional[ListNode]:
         if head is None:
             return None
 
-        nodes: List[Node] = []
-        new_nodes: List[Node] = []
+        nodes: List[ListNode] = []
+        new_nodes: List[ListNode] = []
 
         while head:
             nodes.append(head)
-            new_nodes.append(Node(head.val))
+            new_nodes.append(ListNode(head.val))
             head = head.next
 
         n = len(new_nodes)
@@ -105,52 +91,6 @@ class Solution:
                 new.random = new_nodes[rand_idx]
 
         return new_nodes[0]
-
-
-NodeData = List[Optional[int]]
-NodeList = List[NodeData]
-
-
-def build_linked_list(nodes: NodeList) -> Optional[Node]:
-    n = len(nodes)
-    if n == 0:
-        return None
-    linked_list_nodes: List[Node] = []
-    # create linked list node and populate values
-    for data in nodes:
-        val = data[0]
-        if val is None:
-            raise TypeError()
-        node = Node(val)
-        linked_list_nodes.append(node)
-    # set next and random links foreach linked list node
-    for i, ll_node in enumerate(linked_list_nodes):
-        data = nodes[i]
-        rand_idx = data[1]
-        ll_node.random = linked_list_nodes[rand_idx] if rand_idx is not None else None
-        ll_node.next = linked_list_nodes[i + 1] if i + 1 < n else None
-
-    return linked_list_nodes[0]
-
-
-def build_node_list(head: Optional[Node]) -> NodeList:
-    if head is None:
-        return []
-    nodes: NodeList = []
-    ll_nodes: List[Node] = []
-    # create node data while traversing through head
-    while head:
-        node_data = [head.val, None]
-        nodes.append(node_data)
-        ll_nodes.append(head)
-        head = head.next
-    # populate node.random field once we have all the nodes relative index
-    for i, node in enumerate(nodes):
-        ll_node = ll_nodes[i]
-        node[0] = ll_node.val
-        node[1] = ll_nodes.index(ll_node.random) if ll_node.random is not None else None
-
-    return nodes
 
 
 def test_solution(nodes: NodeList, expected: NodeList):
