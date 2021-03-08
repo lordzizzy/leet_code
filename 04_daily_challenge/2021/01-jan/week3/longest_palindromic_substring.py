@@ -3,7 +3,6 @@
 # Longest Palindromic Substring
 # Given a string s, return the longest palindromic substring in s.
 
-
 # Example 1:
 # Input: s = "babad"
 # Output: "bab"
@@ -21,50 +20,68 @@
 # Input: s = "ac"
 # Output: "a"
 
-
 # Constraints:
 # 1 <= s.length <= 1000
 # s consist of only digits and English letters (lower-case and/or upper-case)
 
 
+from typing import Callable
+from termcolor import colored
+
+
 class Solution:
     def longestPalindrome(self, s: str) -> str:
-        start = end = 0
+        return self.longestPalindrome_expand_from_center(s)
 
+    def longestPalindrome_expand_from_center(self, s: str) -> str:
+        def expand(s: str, left: int, right: int) -> str:
+            n = len(s)
+            while left >= 0 and right < n and s[left] == s[right]:
+                left -= 1
+                right += 1
+            return s[left + 1 : right]
+
+        res = ""
         for i in range(0, len(s)):
-            # for the case of a
-            n1 = self.expand(s, i, i)
-            # for the case of aa
-            n2 = self.expand(s, i, i+1)
+            # for the odd case of "aba"
+            s1 = expand(s, i, i)
+            # for the even case of "abba"
+            s2 = expand(s, i, i + 1)
 
             # select whichever is the biggest
-            n = max(n1, n2)
+            s1 = s1 if len(s1) > len(s2) else s2
+            res = res if len(res) > len(s1) else s1
 
-            # calculate start and end based on shifted n from where i (center) is
-            if n > (end - start):
-                start = i - (n-1)//2
-                end = i + n//2
-
-        return s[start:end+1]
-
-    def expand(self, s: str, left: int, right: int) -> int:
-        n = len(s)
-        while left >= 0 and right < n and s[left] == s[right]:
-            left -= 1
-            right += 1
-        return right - left - 1
+        return res
 
 
-def checkSolution(s: str, expected: str):
+SolutionFunc = Callable[[str], str]
+
+
+def test_solution(s: str, expected: str) -> None:
+    def test_impl(func: SolutionFunc, s: str, expected: str) -> None:
+        r = func(s)
+        if len(r) == len(expected):
+            print(
+                colored(
+                    f"PASSED {func.__name__} => Longest palindromic substring for {s} is {r}",
+                    "green",
+                )
+            )
+        else:
+            print(
+                colored(
+                    f"FAILED {func.__name__} => Longest palindromic substring for {s} is {r} but expected {expected}",
+                    "red",
+                )
+            )
+
     sln = Solution()
-    r = sln.longestPalindrome(s)
-    assert len(r) == len(expected), \
-        f"result={r}'s length: {len(r)} but expected:{len(expected)}"
-    print(f'Passed solution for {s}, result={r}')
+    test_impl(sln.longestPalindrome_expand_from_center, s, expected)
 
 
 if __name__ == "__main__":
-    checkSolution(s="babad", expected="bab")
-    checkSolution(s="cbbd", expected="bb")
-    checkSolution(s="a", expected="a")
-    checkSolution(s="ac",  expected="a")
+    test_solution(s="babad", expected="bab")
+    test_solution(s="cbbd", expected="bb")
+    test_solution(s="a", expected="a")
+    test_solution(s="ac", expected="a")
