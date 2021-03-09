@@ -51,19 +51,19 @@ def build_tree(nodes: List[Optional[int]]) -> Optional[TreeNode]:
 def build_list(root: Optional[TreeNode]) -> List[Optional[int]]:
     if root is None:
         return []
-    lst = []
+    res = []
     fringe = deque([root])
-    lst.append(root.val)
+    res.append(root.val)
     while len(fringe) > 0:
         head = fringe.popleft()
         if head.left:
-            lst.append(head.left.val)
+            res.append(head.left.val)
             fringe.append(head.left)
         else:
-            lst.append(None)
+            res.append(None)
         if head.right:
-            lst.append(head.right.val)
+            res.append(head.right.val)
             fringe.append(head.right)
         else:
-            lst.append(None)
-    return lst
+            res.append(None)
+    return res
