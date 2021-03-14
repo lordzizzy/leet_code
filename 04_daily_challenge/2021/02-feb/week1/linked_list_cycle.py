@@ -1,4 +1,3 @@
-
 # https://leetcode.com/explore/challenge/card/february-leetcoding-challenge-2021/584/week-1-february-1st-february-7th/3627/
 
 # Given head, the head of a linked list, determine if the linked list has a cycle in it.
@@ -30,16 +29,15 @@
 
 # Follow up: Can you solve it using O(1) (i.e. constant) memory?
 
-from typing import List
+from __future__ import annotations
+from typing import Callable, List, Optional
 from termcolor import colored
 
 # Definition for singly-linked list.
-
-
 class ListNode:
-    def __init__(self, x: int):
+    def __init__(self, x: int, next: Optional[ListNode] = None):
         self.val = x
-        self.next = None
+        self.next = next
 
     def __str__(self) -> str:
         s: str = ""
@@ -47,11 +45,11 @@ class ListNode:
         visited = set()
         while curr:
             if curr in visited:
-                s = s + f"cycle to {curr.next.val}"
+                s = s + f"cycle to {curr.next.val}" if curr.next else s
                 break
             visited.add(curr)
             if curr.next:
-                s = s + f"{curr.val}->"    
+                s = s + f"{curr.val}->"
                 curr = curr.next
             else:
                 s = s + f"{curr.val}"
@@ -62,9 +60,8 @@ class ListNode:
 class Solution:
     def hasCycle(self, head: ListNode) -> bool:
         return self.hasCycle_floyd_algo(head)
-        # return self.hasCycle_set_lookup(head)
 
-    def hasCycle_set_lookup(self, head: ListNode) -> bool:
+    def hasCycle_set_lookup(self, head: Optional[ListNode]) -> bool:
         lookup = set()
         while head:
             if head in lookup:
@@ -73,23 +70,24 @@ class Solution:
             head = head.next
         return False
 
-    def hasCycle_floyd_algo(self, head: ListNode) -> bool:
+    def hasCycle_floyd_algo(self, head: Optional[ListNode]) -> bool:
         if head is None:
-            return False            
-        slow = fast = head
+            return False
+        slow: Optional[ListNode] = head
+        fast: Optional[ListNode] = head
         while fast and fast.next:
             slow = slow.next
             fast = fast.next.next
-            if fast and fast.val == slow.val:
+            if fast and slow and fast.val == slow.val:
                 return True
         return False
 
 
 def build_linked_list(nodes: List[int], pos: int) -> ListNode:
-    stack = []
+    stack: List[ListNode] = []
     prev = None
-    for val in nodes:
-        node = ListNode(val)
+    for v in nodes:
+        node = ListNode(v)
         if prev:
             prev.next = node
         prev = node
@@ -101,15 +99,24 @@ def build_linked_list(nodes: List[int], pos: int) -> ListNode:
     return stack[0]
 
 
-def test_solution(nodes: List[int], pos: int, expected: bool):    
-    def test_impl(func, nodes: List[int], pos: int, expected: bool):
-        head = build_linked_list(nodes, pos)        
+SolutionFunc = Callable[[ListNode], bool]
+
+
+def test_solution(nodes: List[int], pos: int, expected: bool):
+    def test_impl(func: SolutionFunc, nodes: List[int], pos: int, expected: bool):
+        head = build_linked_list(nodes, pos)
         r = func(head)
         if r == expected:
-            print(colored(f"PASSED {func.__name__}=> {nodes} has cycle is {r}", "green"))
+            print(
+                colored(f"PASSED {func.__name__}=> {nodes} has cycle is {r}", "green")
+            )
         else:
             print(
-                colored(f"FAILED {func.__name__}=> {nodes} has cycle is {r}, but expected: {expected}", "red"))
+                colored(
+                    f"FAILED {func.__name__}=> {nodes} has cycle is {r}, but expected: {expected}",
+                    "red",
+                )
+            )
 
     sln = Solution()
     test_impl(sln.hasCycle_floyd_algo, nodes, pos, expected)
