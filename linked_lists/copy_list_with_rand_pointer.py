@@ -41,7 +41,7 @@
 from typing import DefaultDict, Optional, List
 from termcolor import colored
 
-from shared.linked_list import ListNode, NodeList, build_linked_list, build_node_list
+from shared.linked_list_rand import ListNode, NodeList, build_linked_list, build_node_list
 
 
 class Solution:
