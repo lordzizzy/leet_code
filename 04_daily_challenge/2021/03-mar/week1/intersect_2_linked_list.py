@@ -36,7 +36,7 @@
 
 from typing import Optional, Set
 from termcolor import colored
-from shared.linked_list import ListNode, NodeList, build_linked_list, build_node_list
+from shared.linked_list import ListNode
 
 
 class Solution:
