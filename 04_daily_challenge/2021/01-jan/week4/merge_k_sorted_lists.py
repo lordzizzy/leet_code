@@ -1,4 +1,3 @@
-
 # https://leetcode.com/explore/challenge/card/january-leetcoding-challenge-2021/582/week-4-january-22nd-january-28th/3615/
 
 # Merge k Sorted Lists
@@ -35,26 +34,22 @@
 # lists[i] is sorted in ascending order.
 # The sum of lists[i].length won't exceed 10^4.
 
-from typing import List
-
+from typing import List, Optional
 from termcolor import colored
+from shared.linked_list import ListNode
 
 
-# Definition for singly-linked list.
-class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
+ListNodeList = List[Optional[ListNode]]
 
 
 class Solution:
-    def mergeKLists(self, lists: List[ListNode]) -> ListNode:
+    def mergeKLists(self, lists: ListNodeList) -> Optional[ListNode]:
         if not lists or len(lists) == 0:
             return None
 
         # n log K time complexity
         while len(lists) > 1:
-            merged = []
+            merged: ListNodeList = []
 
             for i in range(0, len(lists), 2):
                 l1 = lists[i]
@@ -65,8 +60,10 @@ class Solution:
 
         return lists[0]
 
-    def merge2Lists(self, l1: ListNode, l2: ListNode):
-        dummy = ListNode()
+    def merge2Lists(
+        self, l1: Optional[ListNode], l2: Optional[ListNode]
+    ) -> Optional[ListNode]:
+        dummy = ListNode(val=0)
         tail = dummy
 
         while l1 and l2:
@@ -86,18 +83,18 @@ class Solution:
         return dummy.next
 
 
-def listNumsToListNodes(input: List[List[int]]) -> List[ListNode]:
+def build_listnode_list(input: List[List[int]]) -> ListNodeList:
     if not input or len(input) == 0:
-        return None
+        return []
 
-    result = []
+    result: ListNodeList = []
     for lst in input:
         if not lst or len(lst) == 0:
             continue
-        head = ListNode(val=lst[0], next=None)
+        head = ListNode(val=lst[0])
         curr = head
         for i in range(1, len(lst)):
-            node = ListNode(val=lst[i], next=None)
+            node = ListNode(val=lst[i])
             curr.next = node
             curr = node
         result.append(head)
@@ -105,33 +102,29 @@ def listNumsToListNodes(input: List[List[int]]) -> List[ListNode]:
     return result
 
 
-def listNodeToListNums(node: ListNode) -> List[int]:
-    nums = []
+def build_listnode_nums(node: Optional[ListNode]) -> List[Optional[int]]:
+    nums: List[Optional[int]] = []
     while node:
         nums.append(node.val)
         node = node.next
     return nums
 
 
-def test_toListOfListNodes(lists: List[List[int]]):
-    nodes = listNumsToListNodes(lists)
-    if listNodeToListNums(nodes) == lists:
-        print(colored(f"PASSED.", "green"))
-    else:
-        print(colored(f"FAILED.", "red"))
-
-
 def test_Solution(input: List[List[int]], expected: List[int]):
-    # convert input into List of ListNodes
     sln = Solution()
-    r = sln.mergeKLists(listNumsToListNodes(input))
-    if listNodeToListNums(r) == expected:
+    lists = build_listnode_list(input)
+    r = sln.mergeKLists(lists)
+    if build_listnode_nums(r) == expected:
         print(colored(f"PASSED - merged {input} into {r}", "green"))
     else:
         print(
-            colored(f"FAILED - merged {input} into {r}, but expected: {expected}", "red"))
+            colored(
+                f"FAILED - merged {input} into {r}, but expected: {expected}", "red"
+            )
+        )
 
 
 if __name__ == "__main__":
-    test_Solution(input=[[1, 4, 5], [1, 3, 4], [2, 6]],
-                  expected=[1, 1, 2, 3, 4, 4, 5, 6])
+    test_Solution(
+        input=[[1, 4, 5], [1, 3, 4], [2, 6]], expected=[1, 1, 2, 3, 4, 4, 5, 6]
+    )
