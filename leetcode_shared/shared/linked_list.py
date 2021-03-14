@@ -3,66 +3,43 @@ from typing import Optional, List
 
 
 class ListNode:
-    def __init__(
-        self, x: int, next: Optional[ListNode] = None, random: Optional[ListNode] = None
-    ):
-        self.val = x
+    def __init__(self, val: int, next: Optional[ListNode] = None):
+        self.val = val
         self.next = next
-        self.random = random
 
     def __repr__(self) -> str:
         res = ""
         head = self
         while head:
-            if head.next:
-                res += f"(val:{head.val}, rand:{id(head.random) if head.random else None})-->"
-            else:
-                res += f"(val:{head.val}, rand:{id(head.random) if head.random else None})-->None"
+            res += f"{head.val}->"
+            if head.next is None:
+                res += "None"
             head = head.next
         return res
 
 
-NodeData = List[Optional[int]]
-NodeList = List[NodeData]
+NodeDataList = List[int]
 
 
-def build_linked_list(nodes: NodeList) -> Optional[ListNode]:
-    n = len(nodes)
-    if n == 0:
+def build_linked_list(nodes: NodeDataList) -> Optional[ListNode]:
+    if not nodes:
         return None
-    linked_list_nodes: List[ListNode] = []
+    res: List[ListNode] = []
     # create linked list node and populate values
-    for data in nodes:
-        val = data[0]
-        if val is None:
-            raise TypeError()
-        node = ListNode(val)
-        linked_list_nodes.append(node)
-    # set next and random links foreach linked list node
-    for i, ll_node in enumerate(linked_list_nodes):
-        data = nodes[i]
-        rand_idx = data[1]
-        ll_node.random = linked_list_nodes[rand_idx] if rand_idx is not None else None
-        ll_node.next = linked_list_nodes[i + 1] if i + 1 < n else None
+    for num in nodes:
+        res.append(ListNode(val=num))
+    # set next links foreach linked list node
+    for i, node in enumerate(res):
+        node.next = res[i + 1] if i + 1 < len(nodes) else None
 
-    return linked_list_nodes[0]
+    return res[0]
 
 
-def build_node_list(head: Optional[ListNode]) -> NodeList:
+def build_node_data_list(head: Optional[ListNode]) -> NodeDataList:
     if head is None:
         return []
-    nodes: NodeList = []
-    ll_nodes: List[ListNode] = []
-    # create node data while traversing through head
+    res: NodeDataList = []
     while head:
-        node_data = [head.val, None]
-        nodes.append(node_data)
-        ll_nodes.append(head)
+        res.append(head.val)
         head = head.next
-    # populate node.random field once we have all the nodes relative index
-    for i, node in enumerate(nodes):
-        ll_node = ll_nodes[i]
-        node[0] = ll_node.val
-        node[1] = ll_nodes.index(ll_node.random) if ll_node.random is not None else None
-
-    return nodes
+    return res
