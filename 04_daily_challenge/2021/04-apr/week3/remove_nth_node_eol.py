@@ -97,11 +97,10 @@ def test_solution(head_list: List[int], n: int, expected: List[int]) -> None:
             )
 
     sln = Solution()
-    # test_impl(sln.removeNthFromEnd, head_list, n, expected)
+    test_impl(sln.removeNthFromEnd, head_list, n, expected)
     test_impl(sln.removeNthFromEnd_slow_fast_ptr, head_list, n, expected)
 
 
 if __name__ == "__main__":
-    # test_solution(head_list=[1, 2, 3, 4, 5], n=2, expected=[1, 2, 3, 5])
+    test_solution(head_list=[1, 2, 3, 4, 5], n=2, expected=[1, 2, 3, 5])
     test_solution(head_list=[1, 2], n=2, expected=[2])
-    
