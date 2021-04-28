@@ -36,7 +36,6 @@
 
 from typing import Callable, Deque, List, Set, Tuple
 from termcolor import colored
-
 from itertools import product
 
 Matrix = List[List[int]]
