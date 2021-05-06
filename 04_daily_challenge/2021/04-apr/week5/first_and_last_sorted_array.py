@@ -57,7 +57,7 @@ class Solution:
 
     def searchRange_2_binary_searches(self, nums: List[int], target: int) -> List[int]:
         def bin_search(n: int) -> int:
-            lo: int = 0
+            lo = 0
             hi = len(nums)
             while lo < hi:
                 mid: int = (lo + hi) // 2
