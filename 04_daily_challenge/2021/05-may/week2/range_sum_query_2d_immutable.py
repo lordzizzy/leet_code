@@ -97,6 +97,7 @@ class NumMatrix_cache_rows(NumMatrix):
 
 # SUM(ABCD) = SUM(OD) - SUM(OB) - SUM(OC) +  SUM(OA)
 # O(1) time complexity, O(MN) memory
+# https://leetcode.com/problems/range-sum-query-2d-immutable/discuss/1204283/Python-short-dp-explained
 class NumMatrix_dp(NumMatrix):
     def __init__(self, matrix: Matrix):
         m, n = len(matrix), len(matrix[0])
