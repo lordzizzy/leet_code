@@ -60,6 +60,7 @@ class Solution:
 
         traverse(root)
 
+    # https://leetcode.com/problems/flatten-binary-tree-to-linked-list/discuss/37010/Share-my-simple-NON-recursive-solution-O(1)-space-complexity!
     def flatten_iterative_morris(self, root: Optional[TreeNode]) -> None:
         if not root:
             return None
