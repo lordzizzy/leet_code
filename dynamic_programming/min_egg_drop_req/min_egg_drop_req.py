@@ -13,8 +13,11 @@ class Solution:
         if eggs == 1:
             return tries
         else:
-            return 1 + self.min_egg_drop_req(eggs-1, tries-1) \
-                + self.min_egg_drop_req(eggs, tries-1)
+            return (
+                1
+                + self.min_egg_drop_req(eggs - 1, tries - 1)
+                + self.min_egg_drop_req(eggs, tries - 1)
+            )
 
 
 def check_solution(eggs: int, tries: int, expected: int):
@@ -22,10 +25,18 @@ def check_solution(eggs: int, tries: int, expected: int):
     r = sln.min_egg_drop_req(eggs, tries)
     if r == expected:
         print(
-            f"PASSED - {eggs} eggs require minimum of {tries} tries to cover {r} floors.")
+            colored(
+                f"PASSED - {eggs} eggs require minimum of {tries} tries to cover {r} floors.",
+                "green",
+            )
+        )
     else:
-        print(colored(
-            f"FAILED - {eggs} eggs require minimum of {tries} tries to cover {r} floors, but expected: {expected} floors", "red"))
+        print(
+            colored(
+                f"FAILED - {eggs} eggs require minimum of {tries} tries to cover {r} floors, but expected: {expected} floors",
+                "red",
+            )
+        )
 
 
 if __name__ == "__main__":
