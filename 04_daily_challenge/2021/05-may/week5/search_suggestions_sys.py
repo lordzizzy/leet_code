@@ -113,6 +113,21 @@ class Solution:
             res.append([w for w in words[i : i + 3] if w.startswith(prefix)])
         return res
 
+    # https://leetcode.com/problems/search-suggestions-system/discuss/1242867/Python-Short-sort-%2B-2-pointers-explained
+    def suggestedProducts_2ptrs(
+        self, products: List[str], searchWord: str
+    ) -> List[List[str]]:
+        words = sorted(products)
+        beg, end = 0, len(words) - 1
+        ans: List[List[str]] = []
+        for i, c in enumerate(searchWord):
+            while beg <= end and (len(words[beg]) <= i or words[beg][i] != c):
+                beg += 1
+            while beg <= end and (len(words[end]) <= i or words[end][i] != c):
+                end -= 1
+            ans.append(words[beg : min(end + 1, beg + 3)])
+        return ans
+
 
 SolutionFunc = Callable[[List[str], str], List[List[str]]]
 
@@ -145,6 +160,7 @@ def test_solution(
     sln = Solution()
     test_impl(sln.suggestedProducts_trie, products, searchWord, expected)
     test_impl(sln.suggestedProducts_binarysearch, products, searchWord, expected)
+    test_impl(sln.suggestedProducts_2ptrs, products, searchWord, expected)
 
 
 if __name__ == "__main__":
