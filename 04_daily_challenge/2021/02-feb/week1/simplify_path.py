@@ -38,12 +38,13 @@
 # path consists of English letters, digits, period '.', slash '/' or '_'.
 # path is a valid absolute Unix path.
 
+from typing import Callable, List
 from termcolor import colored
 
 
 class Solution:
     def simplifyPath(self, path: str) -> str:
-        stack = []
+        stack: List[str] = []
         for token in path.split("/"):
             if token in ("", "."):
                 pass
@@ -55,21 +56,31 @@ class Solution:
         return "/" + "/".join(stack)
 
 
+SolutionFunc = Callable[[str], str]
+
+
 def test_solution(path: str, expected: str):
-    def test_impl(func, path, expected):
+    def test_impl(func: SolutionFunc, path: str, expected: str):
         r = func(path)
         if r == expected:
             print(
-                colored(f"PASSED {func.__name__} => {path} to simplifed path: {r}", "green"))
+                colored(
+                    f"PASSED {func.__name__} => {path} to simplifed path: {r}", "green"
+                )
+            )
         else:
-            print(colored(
-                f"FAILED {func.__name__} => {path} to simplifed path: {r}, expected: {expected}", "red"))
+            print(
+                colored(
+                    f"FAILED {func.__name__} => {path} to simplifed path: {r}, expected: {expected}",
+                    "red",
+                )
+            )
+
     sln = Solution()
     test_impl(sln.simplifyPath, path, expected)
 
 
 if __name__ == "__main__":
-
     test_solution(path="/home/", expected="/home")
     test_solution(path="/../", expected="/")
     test_solution(path="/home//foo/", expected="/home/foo")
