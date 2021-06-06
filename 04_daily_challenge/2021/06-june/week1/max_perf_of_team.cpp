@@ -1,11 +1,10 @@
-#include <iostream>
-#include <sstream>
-#include <format>
+#include "leetcode/stdafx.h"
 #include <vector>
 #include <functional>
 #include <queue>
 
 using namespace std;
+using namespace leetcode::format;
 
 int maxPerformance_greedy_priorityQ(int const n, vector<int> const &speeds, vector<int> const &efficiencies, int const k)
 {
@@ -34,28 +33,10 @@ int maxPerformance_greedy_priorityQ(int const n, vector<int> const &speeds, vect
     return perf % int(1e9 + 7);
 }
 
-using SolutionFunc = std::function<int(int, vector<int> const &, vector<int> const &, int)>;
-
-SolutionFunc f = maxPerformance_greedy_priorityQ;
-
-constexpr auto to_str = [](vector<int> const &vec)
-{
-    stringstream ss;
-
-    for (size_t i = 0; i < vec.size(); i++)
-    {
-        if (i != 0)
-        {
-            ss << ",";
-        }
-        ss << vec[i];
-    }
-
-    return ss.str();
-};
-
 void test_solution(int n, vector<int> const &speeds, vector<int> const &efficiencies, int k, int expected)
 {
+    using SolutionFunc = std::function<int(int, vector<int> const &, vector<int> const &, int)>;
+    
     auto test_impl = [](SolutionFunc func, int n, vector<int> const &speeds, vector<int> const &efficiencies, int k, int expected)
     {
         auto r = func(n, speeds, efficiencies, k);
