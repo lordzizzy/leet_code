@@ -86,6 +86,10 @@ class Solution:
                 q.extend(neighbours(node))
         return -1
 
+    # https://leetcode.com/problems/open-the-lock/discuss/110237/Regular-java-BFS-solution-and-2-end-BFS-solution-with-improvement
+    def openLock_2end_bfs(self, deadends: List[str], target: str) -> int:
+        raise NotImplementedError()
+
 
 SolutionFunc = Callable[[List[str], str], int]
 
@@ -97,7 +101,6 @@ def test_solution(deadends: List[str], target: str, expected: int) -> None:
         r = func(deadends, target)
         if r == expected:
             print(
-                
                 colored(
                     f"PASSED {func.__name__} => Min moves to open lock of target:{target} with deadends: {deadends} is {r}",
                     "green",
