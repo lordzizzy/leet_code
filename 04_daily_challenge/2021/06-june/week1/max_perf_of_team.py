@@ -52,15 +52,15 @@ class Solution:
     def maxPerformance(
         self, n: int, speed: List[int], efficiency: List[int], k: int
     ) -> int:
-        return self.maxPerformance_greedy_with_priorityq(n, speed, efficiency, k)
+        return self.maxPerformance_greedy_with_priorityQ(n, speed, efficiency, k)
 
-    def maxPerformance_greedy_with_priorityq(
+    def maxPerformance_greedy_with_priorityQ(
         self, n: int, speed: List[int], efficiency: List[int], k: int
     ) -> int:
         candidates = sorted(zip(efficiency, speed), key=lambda t: t[0], reverse=True)
         speed_heap: List[int] = []
         speed_sum, perf = 0, 0
-        
+
         for eff, spd in candidates:
             if len(speed_heap) > k - 1:
                 speed_sum -= heapq.heappop(speed_heap)
@@ -121,7 +121,7 @@ def test_solution(
 
     sln = Solution()
     test_impl(
-        sln.maxPerformance_greedy_with_priorityq, n, speed, efficiency, k, expected
+        sln.maxPerformance_greedy_with_priorityQ, n, speed, efficiency, k, expected
     )
     test_impl(sln.maxPerformance_fastest, n, speed, efficiency, k, expected)
 
