@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int maxPerformance_greedy_priorityQ(const int n, vector<int> const &speeds, vector<int> const &efficiencies, const int k)
+int maxPerformance_greedy_priorityQ(int const n, vector<int> const &speeds, vector<int> const &efficiencies, int const k)
 {
     vector<pair<int, int>> candidates(n);
     for (int i = 0; i < n; i++)
