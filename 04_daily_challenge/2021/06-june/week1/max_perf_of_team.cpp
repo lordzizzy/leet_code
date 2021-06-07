@@ -35,31 +35,32 @@ void test_solution(int n, vector<int> const &speeds, vector<int> const &efficien
 {
     using SolutionFunc = std::function<int(int, vector<int> const &, vector<int> const &, int)>;
 
-    auto test_impl = [](SolutionFunc func, int n, vector<int> const &speeds,
+    auto test_impl = [](SolutionFunc func, string_view func_name, int n, vector<int> const &speeds,
                         vector<int> const &efficiencies, int k, int expected) {
-        auto r = func(n, speeds, efficiencies, k);
+        auto const r = func(n, speeds, efficiencies, k);
         if (r == expected) {
-            cout << format("PASSED => Max performance of chosen {} of team with size {}, speeds: "
-                           "{} and efficiencies: {} is {}.\n",
-                           k, n, to_str(speeds), to_str(efficiencies), r);
+            cout << format(
+                "PASSED {} => Max performance of chosen {} of team with size {}, speeds: "
+                "{} and efficiencies: {} is {}.\n",
+                func_name, k, n, to_str(speeds), to_str(efficiencies), r);
         }
         else {
-            cout << format("FAILED => Max performance of chosen {} of team with size {}, speeds: "
-                           "{} and efficiencies: {} is {} but expected {}.\n",
-                           k, n, to_str(speeds), to_str(efficiencies), r, expected);
+            cout << format(
+                "FAILED {} => Max performance of chosen {} of team with size {}, speeds: "
+                "{} and efficiencies: {} is {} but expected {}.\n",
+                func_name, k, n, to_str(speeds), to_str(efficiencies), r, expected);
         }
         cout << endl;
     };
 
-    test_impl(maxPerformance_greedy_priorityQ, n, speeds, efficiencies, k, expected);
+    test_impl(maxPerformance_greedy_priorityQ, "maxPerformance_greedy_priorityQ", n, speeds,
+              efficiencies, k, expected);
 }
 
 int main()
 {
     test_solution(6, {2, 10, 3, 1, 5, 8}, {5, 4, 3, 9, 7, 2}, 2, 60);
-
     test_solution(6, {2, 10, 3, 1, 5, 8}, {5, 4, 3, 9, 7, 2}, 3, 68);
-
     test_solution(6, {2, 10, 3, 1, 5, 8}, {5, 4, 3, 9, 7, 2}, 4, 72);
 
     return 0;
