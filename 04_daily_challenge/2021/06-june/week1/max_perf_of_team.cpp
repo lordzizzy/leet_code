@@ -1,4 +1,4 @@
-#include "leetcode/stdafx.h"
+#include "stdafx.h"
 #include <functional>
 #include <queue>
 #include <vector>

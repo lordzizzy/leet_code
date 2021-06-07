@@ -1,5 +1,5 @@
 #pragma once
 
-#include "format.h"
+#include "leetcode/format.h"
 #include <format>
 #include <iostream>
