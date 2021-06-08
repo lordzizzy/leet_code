@@ -105,11 +105,12 @@ void test_solution(Vec const &costs, int expected)
                               int expected) {
         auto const r = func(costs);
         if (r == expected) {
-            cout << format("PASSED {} => Min cost to reach top floor with costs {} is {}\n",
-                           func_name, to_str(costs), r);
+            fmt::print(pass_color, "PASSED {} => Min cost to reach top floor with costs {} is {}\n",
+                       func_name, to_str(costs), r);
         }
         else {
-            cout << format(
+            fmt::print(
+                fail_color,
                 "FAILED {} => Min cost to reach top floor with costs {} is {} but expected {}\n",
                 func_name, to_str(costs), r, expected);
         }
