@@ -5,7 +5,9 @@
 using namespace std;
 using namespace leetcode::format;
 
-int longestConsecutive_set(vector<int> const &nums)
+using Vec = std::vector<int>;
+
+int longestConsecutive_set(Vec const &nums)
 {
     if (nums.size() == 0) {
         return 0;
@@ -24,13 +26,13 @@ int longestConsecutive_set(vector<int> const &nums)
     return longest;
 }
 
-void test_solution(vector<int> const &nums, int const expected)
+void test_solution(Vec const &nums, int const expected)
 {
-    using SolutionFunc = std::function<int(vector<int> const &)>;
+    using SolutionFunc = std::function<int(Vec const &)>;
 
-    auto test_impl = [](SolutionFunc func, string_view func_name, vector<int> const &nums,
-                        int const expected) {
-        auto r = func(nums);
+    auto constexpr test_impl = [](SolutionFunc func, string_view func_name, Vec const &nums,
+                                  int const expected) {
+        auto const r = func(nums);
         if (r == expected) {
             cout << format("PASSED {} => Longest consecutive sequence in {} is {}\n", func_name,
                            to_str(nums), r);
