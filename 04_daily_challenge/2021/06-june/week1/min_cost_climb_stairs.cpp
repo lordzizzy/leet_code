@@ -24,6 +24,9 @@
 // # 2 <= cost.length <= 1000
 // # 0 <= cost[i] <= 999
 
+// REALLY good reference on dynamic programming here
+// https://leetcode.com/problems/min-cost-climbing-stairs/discuss/110111/The-ART-of-dynamic-programming
+
 #include "stdafx.h"
 #include <vector>
 
@@ -79,6 +82,8 @@ int minCostClimbingStairs_dp_bottomup(Vec const &costs)
     return dp[N];
 }
 
+// fastest, constant space, only care about n-1 and n-2 steps at step n =>
+// only 2 variables needed, + 1 to store result from callstack c = cost[i] + min(a,b)
 int minCostClimbingStairs_dp_bottomup_optimized(Vec const &costs)
 {
     auto const N = costs.size();
@@ -96,7 +101,8 @@ void test_solution(Vec const &costs, int expected)
 {
     using SolutionFunc = function<int(Vec const &)>;
 
-    auto const test_impl = [](SolutionFunc func, string_view func_name, Vec const &costs, int expected) {
+    auto const test_impl = [](SolutionFunc func, string_view func_name, Vec const &costs,
+                              int expected) {
         auto const r = func(costs);
         if (r == expected) {
             cout << format("PASSED {} => Min cost to reach top floor with costs {} is {}\n",
