@@ -34,15 +34,14 @@ void test_solution(Vec const &nums, int const expected)
                                   int const expected) {
         auto const r = func(nums);
         if (r == expected) {
-            cout << format("PASSED {} => Longest consecutive sequence in {} is {}\n", func_name,
-                           to_str(nums), r);
+            fmt::print(pass_color, "PASSED {} => Longest consecutive sequence in {} is {}\n",
+                       func_name, to_str(nums), r);
         }
         else {
-            cout << format(
-                "FAILED {} => Longest consecutive sequence in {} is {} but expected {}\n",
-                func_name, to_str(nums), r, expected);
+            fmt::print(fail_color,
+                       "FAILED {} => Longest consecutive sequence in {} is {} but expected {}\n",
+                       func_name, to_str(nums), r, expected);
         }
-        cout << endl;
     };
 
     test_impl(longestConsecutive_set, "longestConsecutive_set", nums, expected);
