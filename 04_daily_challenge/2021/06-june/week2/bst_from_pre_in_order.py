@@ -29,7 +29,7 @@ TreeNode = bst.TreeNode
 
 
 class Solution:
-    def buildTree_recursive(
+    def buildTree_recursive_map(
         self, preorder: List[int], inorder: List[int]
     ) -> Optional[TreeNode]:
         preorder_index = 0
@@ -47,6 +47,27 @@ class Solution:
             return root
 
         return array_to_tree(0, len(preorder) - 1)
+
+    # https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/discuss/34543/Simple-O(n)-without-map
+    #
+    # NOTE:this method will reverse the preorder and inorder arrays in place and
+    # use them to build the tree, instead of allocating space for an inorder
+    # value->index lookup map
+    # the reversing reason is to use the O(1) list.pop() instead of O(N) list.pop(0)
+    def buildTree_recursive_constant_space(
+        self, preorder: List[int], inorder: List[int]
+    ) -> Optional[TreeNode]:
+        def build(stop: Optional[int]) -> Optional[TreeNode]:
+            if inorder and inorder[-1] != stop:
+                root = TreeNode(preorder.pop())
+                root.left = build(root.val)
+                inorder.pop()
+                root.right = build(stop)
+                return root
+
+        preorder.reverse()
+        inorder.reverse()
+        return build(None)
 
 
 SolutionFunc = Callable[[List[int], List[int]], Optional[TreeNode]]
@@ -80,7 +101,8 @@ def test_solution(
             )
 
     sln = Solution()
-    test_impl(sln.buildTree_recursive, preorder, inorder, expected)
+    test_impl(sln.buildTree_recursive_map, preorder, inorder, expected)
+    test_impl(sln.buildTree_recursive_constant_space, preorder, inorder, expected)
 
 
 if __name__ == "__main__":
