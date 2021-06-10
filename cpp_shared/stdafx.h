@@ -11,5 +11,5 @@
 #include <iostream>
 #include <string_view>
 
-constexpr auto pass_color = fmt::fg(fmt::color::green);
-constexpr auto fail_color = fmt::fg(fmt::color::red);
+constexpr auto pass_color = fmt::fg(fmt::color::light_green);
+constexpr auto fail_color = fmt::fg(fmt::color::orange_red);
