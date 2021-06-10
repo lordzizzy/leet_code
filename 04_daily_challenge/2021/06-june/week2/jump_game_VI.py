@@ -46,7 +46,7 @@ class Solution:
     def maxResult(self, nums: List[int], k: int) -> int:
         return self.maxResult_dp_monoqueue(nums, k)
 
-    # dp stores max score at index i
+    # dp[i] stores max score at index i
     # dp[i] = nums[i] +  max(dp[i-k], dp[i-k+1], .. dp[i-1])
     #
     # deq is monotone queue that hold the index of "max dp score between i to i-k" in its
