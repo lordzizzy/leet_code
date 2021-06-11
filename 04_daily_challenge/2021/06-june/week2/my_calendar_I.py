@@ -36,6 +36,7 @@
 # 0 <= start < end <= 10⁹
 # At most 1000 calls will be made to book.
 
+from bisect import bisect_left, bisect_right
 from dataclasses import dataclass
 from typing import List, Protocol, Tuple
 
@@ -59,7 +60,42 @@ class MyCalendar_bruteforce(MyCalendar):
         return True
 
 
-@dataclass(order=True)
+# This solution uses 2 properties of overlapping pairs
+#
+# 1. start indexes must always be inserted in ODD index for
+# non-overlapping pairs:
+#   s1---e1
+#                s2----e2
+# ^          ^             ^
+# |          |             |
+# s3         s3            s3
+#
+# 2. start and end index must be inserted in the SAME index returned from the
+#    result of bisect_right(start) and bisect_left(end)
+#
+#   s1---e1
+#                   s2----e2
+#           ^---^
+#           |   |
+#           s3  e3
+class MyCalendar_sort_intervals(MyCalendar):
+    def __init__(self):
+        self.intervals: List[int] = []
+
+    def book(self, start: int, end: int) -> bool:
+        if end < start:
+            return False
+        i = bisect_right(self.intervals, start)
+        if i % 2:
+            return False
+        j = bisect_left(self.intervals, end)
+        if i != j:
+            return False
+        self.intervals[i:i] = [start, end]
+        return True
+
+
+@dataclass(frozen=True)
 class CallInfo:
     start: int
     end: int
@@ -86,6 +122,7 @@ def test_solution(call_infos: List[CallInfo]) -> None:
                 )
 
     test_impl(MyCalendar_bruteforce(), call_infos)
+    test_impl(MyCalendar_sort_intervals(), call_infos)
 
 
 if __name__ == "__main__":
