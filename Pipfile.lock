@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "540db746199eda3a078286280689427962dae74bb2922c2a3112a90d16bf7ae6"
+            "sha256": "31d3f9b08b2ae55d31c472c74b4eddaac8f943cd0b152ef871b54fef41d989cb"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -19,14 +19,6 @@
         "leetcode-shared": {
             "editable": true,
             "path": "./leetcode_shared"
-        },
-        "sortedcontainers": {
-            "hashes": [
-                "sha256:25caa5a06cc30b6b83d11423433f65d1f9d76c4c6a0c90e3379eaa43b9bfdb88",
-                "sha256:a163dcaede0f1c021485e957a39245190e74249897e2ae4b2aa38595db237ee0"
-            ],
-            "index": "pypi",
-            "version": "==2.4.0"
         },
         "termcolor": {
             "hashes": [

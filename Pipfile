@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 termcolor = "*"
 leetcode-shared = {editable = true, path = "./leetcode_shared"}
-sortedcontainers = "*"
 typing-extensions = "*"
 typed-ast = "*"
 
