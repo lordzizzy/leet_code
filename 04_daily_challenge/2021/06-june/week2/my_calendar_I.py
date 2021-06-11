@@ -91,6 +91,7 @@ class MyCalendar_sort_intervals(MyCalendar):
         j = bisect_left(self.intervals, end)
         if i != j:
             return False
+        # use slicing insert
         self.intervals[i:i] = [start, end]
         return True
 
