@@ -28,16 +28,53 @@
 
 from __future__ import annotations
 
-from typing import Callable, List, Optional
-
+from typing import Callable, List, DefaultDict
+from collections import defaultdict
 from termcolor import colored
 
 
 class TrieNode:
+    def __init__(self):
+        self.idx = -1
+        self.pdromes_below: List[int] = []
+        self.children: DefaultDict[str, TrieNode] = defaultdict(TrieNode)
+
+
+class Trie:
     def __init__(self) -> None:
-        self.next: List[Optional[TrieNode]] = [None] * 26
-        self.index = -1
-        self.candidate_indexes: List[int] = []
+        self.root = TrieNode()
+
+    def add(self, word: str, idx: int) -> None:
+        node = self.root
+        for i, letter in enumerate(reversed(word)):
+            if self.is_palindrome(word[: len(word) - i]):
+                node.pdromes_below.append(idx)
+            node = node.children[letter]
+        node.idx = idx
+
+    def search(self, word: str, idx: int, res: List[List[int]]) -> List[List[int]]:
+        node = self.root
+        for i, letter in enumerate(word):
+            if node.idx >= 0 and idx != node.idx and self.is_palindrome(word[i:]):
+                res.append([idx, node.idx])
+            node = node.children.get(letter)
+            if not node:
+                return res
+        for p in node.pdromes_below:
+            if p != idx:
+                res.append([idx, p])
+        if node.idx >= 0 and idx != node.idx:
+            res.append([idx, node.idx])
+        return res
+
+    def is_palindrome(self, word: str) -> bool:
+        i, j = 0, len(word) - 1
+        while i < j:
+            if word[i] != word[j]:
+                return False
+            i += 1
+            j -= 1
+        return True
 
 
 class Solution:
@@ -65,60 +102,15 @@ class Solution:
     # References
     # https://leetcode.com/problems/palindrome-pairs/discuss/79195/O(n-*-k2)-java-solution-with-Trie-structure
     # http://www.allenlipeng47.com/blog/index.php/2016/03/15/palindrome-pairs/
-    # 
+    #
     # Time complexity: O(N * K^2), Space complexity: O(N*26K^2)
     def palindromePairs_reverse_trie(self, words: List[str]) -> List[List[int]]:
-        def is_palindrome(word: str) -> bool:
-            l, r = 0, len(word) - 1
-            while l < r:
-                if word[l] != word[r]:
-                    return False
-                l += 1
-                r -= 1
-            return True
-
-        def add_word(root: TrieNode, word: str, index: int) -> None:
-            for i in reversed(range(len(word))):
-                c = ord(word[i]) - ord("a")
-                if not root.next[c]:
-                    root.next[c] = TrieNode()
-                if is_palindrome(word[:i]):
-                    root.candidate_indexes.append(index)
-                root = root.next[c]
-
-            root.index = index
-            root.candidate_indexes.append(index)
-
-        def search(root: TrieNode, index: int) -> None:
-            nonlocal res
-            candidate = words[index]
-            for j in range(len(candidate)):
-                if (
-                    root.index >= 0
-                    and root.index != index
-                    and is_palindrome(candidate[j:])
-                ):
-                    res.append([index, root.index])
-
-                c = ord(candidate[j]) - ord("a")
-                root = root.next[c]
-                if not root:
-                    return
-
-            for j in root.candidate_indexes:
-                if j == index:
-                    continue
-                res.append([index, j])
-
         res: List[List[int]] = []
-        root = TrieNode()
-
-        for i, word in enumerate(words):
-            add_word(root, word, i)
-
-        for i, word in enumerate(words):
-            search(root, i)
-
+        t = Trie()
+        for idx, w in enumerate(words):
+            t.add(w, idx)
+        for idx, w in enumerate(words):
+            res = t.search(w, idx, res)
         return res
 
 
@@ -157,3 +149,6 @@ if __name__ == "__main__":
     )
     test_solution(words=["bat", "tab", "cat"], expected=[[0, 1], [1, 0]])
     test_solution(words=["a", ""], expected=[[0, 1], [1, 0]])
+    test_solution(
+        words=["a", "abc", "aba", ""], expected=[[0, 3], [3, 0], [2, 3], [3, 2]]
+    )
