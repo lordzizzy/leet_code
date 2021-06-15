@@ -39,7 +39,8 @@ from termcolor import colored
 
 
 class Solution:
-    def maximumUnits(self, boxTypes: List[List[int]], truckSize: int) -> int:
+    # Time complexity: O(N logN), Space complexity: O(N)
+    def maximumUnits_simplesort(self, boxTypes: List[List[int]], truckSize: int) -> int:
         total_units = 0
         sorted_boxes = sorted(boxTypes, key=lambda b: b[1], reverse=True)
 
@@ -77,7 +78,7 @@ def test_solution(boxTypes: List[List[int]], truckSize: int, expected: int) -> N
             )
 
     sln = Solution()
-    test_impl(sln.maximumUnits, boxTypes, truckSize, expected)
+    test_impl(sln.maximumUnits_simplesort, boxTypes, truckSize, expected)
 
 
 if __name__ == "__main__":
