@@ -44,6 +44,7 @@ https://leetcode.com/explore/challenge/card/june-leetcoding-challenge-2021/604/w
 using namespace std;
 using namespace leetcode::format;
 
+// Time complexity: O(N * logN), Space complexity: O(N)
 int maximumUnits_simplesort(vector<vector<int>> const &boxes, int truckSize)
 {
     auto total_units = 0;
