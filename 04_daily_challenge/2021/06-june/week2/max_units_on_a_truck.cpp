@@ -39,24 +39,38 @@ https://leetcode.com/explore/challenge/card/june-leetcoding-challenge-2021/604/w
 
 #include "stdafx.h"
 #include <algorithm>
+#include <array>
 #include <vector>
 
 using namespace std;
-using namespace leetcode::format;
+
+struct Box
+{
+    int box_num;
+    int unit_num;
+};
+
+template <> struct fmt::formatter<Box> : formatter<string_view>
+{
+    template <typename FormatContext> auto format(Box const &box, FormatContext &ctx)
+    {
+        return fmt::format_to(ctx.out(), "{{{},{}}}", box.box_num, box.unit_num);
+    }
+};
 
 // Time complexity: O(N * logN), Space complexity: O(N)
-int maximumUnits_simplesort(vector<vector<int>> const &boxes, int truckSize)
+int maximumUnits_simplesort(vector<Box> const &boxes, int truckSize)
 {
     auto total_units = 0;
-    auto sorted_boxes = vector<vector<int>>(boxes.size());
+    auto sorted_boxes = vector<Box>(boxes.size());
 
     partial_sort_copy(begin(boxes), end(boxes), begin(sorted_boxes), end(sorted_boxes),
-                      [](auto const &a, auto const &b) { return a[1] > b[1]; });
+                      [](auto const &a, auto const &b) { return a.unit_num > b.unit_num; });
 
-    for (auto &box : boxes) {
-        auto const take = min(truckSize, box[0]);
-        total_units += take * box[1];
-        truckSize -= box[0];
+    for (auto const &[box_num, unit_num] : boxes) {
+        auto const take = min(truckSize, unit_num);
+        total_units += take * unit_num;
+        truckSize -= box_num;
         if (truckSize == 0) {
             break;
         }
@@ -65,27 +79,62 @@ int maximumUnits_simplesort(vector<vector<int>> const &boxes, int truckSize)
     return total_units;
 }
 
-void test_solution(vector<vector<int>> const &boxes, int truckSize, int expected)
+// reference:
+// https://leetcode.com/problems/maximum-units-on-a-truck/discuss/1271933/C%2B%2B-16ms-Fastest-to-Date-Simple-Vs.-Bucket-Sort-Solutions-Explained-100-Time-~95-Space
+//
+// Time complexity: O(N), Space complexity: O(N)
+int maximumUnits_bucketsort(vector<Box> const &boxes, int truckSize)
 {
-    using SolutionFunc = function<int(vector<vector<int>> const &, int)>;
+    auto total_units = 0;
+    auto buckets = array<int, 1001>({});
+    auto max_bucket = INT_MIN;
+    auto min_bucket = INT_MAX;
 
-    auto const test_impl = [](SolutionFunc func, string_view func_name,
-                              vector<vector<int>> const &boxes, int truckSize, int expected) {
+    // bucket sort using unit num as bucket index
+    for (auto const &[box_num, unit_num] : boxes) {
+        max_bucket = max(max_bucket, unit_num);
+        min_bucket = min(min_bucket, unit_num);
+        buckets[unit_num] += box_num;
+    }
+
+    for (int i = max_bucket, size, curr_batch; i >= min_bucket; i--) {
+        size = buckets[i];
+        if (size == 0) {
+            continue;
+        }
+        curr_batch = min(size, truckSize);
+        truckSize -= curr_batch;
+        total_units += curr_batch * i;
+        if (truckSize == 0) {
+            break;
+        }
+    }
+
+    return total_units;
+}
+
+void test_solution(vector<Box> const &boxes, int truckSize, int expected)
+{
+    using SolutionFunc = function<int(vector<Box> const &, int)>;
+
+    auto const test_impl = [](SolutionFunc func, string_view func_name, vector<Box> const &boxes,
+                              int truckSize, int expected) {
         auto const r = func(boxes, truckSize);
         if (r == expected) {
             fmt::print(pass_color,
-                       "PASSED {} => Max units on a truck for {} with truck size {} is {}\n",
-                       func_name, to_str(boxes[0]), truckSize, r);
+                       "PASSED {} => Max units on a truck for {{{}}} with truck size {} is {}\n",
+                       func_name, fmt::join(boxes, ","), truckSize, r);
         }
         else {
             fmt::print(fail_color,
-                       "FAILED {} => Max units on a truck for {} with truck size {} is {} but "
+                       "FAILED {} => Max units on a truck for {{{}}} with truck size {} is {} but "
                        "expected {}\n",
-                       func_name, to_str(boxes[0]), truckSize, r, expected);
+                       func_name, fmt::join(boxes, ","), truckSize, r, expected);
         }
     };
 
     test_impl(maximumUnits_simplesort, "maximumUnits_simplesort", boxes, truckSize, expected);
+    test_impl(maximumUnits_bucketsort, "maximumUnits_bucketsort", boxes, truckSize, expected);
 }
 
 int main()
