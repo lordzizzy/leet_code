@@ -49,6 +49,7 @@ int maximumUnits_simplesort(vector<vector<int>> const &boxes, int truckSize)
 {
     auto total_units = 0;
     auto sorted_boxes = vector<vector<int>>(boxes.size());
+
     partial_sort_copy(begin(boxes), end(boxes), begin(sorted_boxes), end(sorted_boxes),
                       [](auto const &a, auto const &b) { return a[1] > b[1]; });
 
