@@ -22,12 +22,13 @@
 # Output: false
 # Explanation: You cannot find a way to form a square with all the matchsticks.
 
-
 # Constraints:
 # 1 <= matchsticks.length <= 15
 # 0 <= matchsticks[i] <= 10⁹
 
+from functools import lru_cache
 from typing import Callable, Dict, List, Tuple
+
 from termcolor import colored
 
 
@@ -108,38 +109,28 @@ class Solution:
             dp[(mask, sides_done)] = ans
             return ans
 
-        return dfs(mask=(1 << N) - 1, sides_done=0)
+        return dfs((1 << N) - 1, 0)
 
-    def makesquare_dp_fastest(self, A: List[int]) -> bool:
-        sm = sum(A)
-        n = len(A)
-        if sm % 4 != 0:
+    # https://leetcode.com/discuss/general-discussion/1125779/Dynamic-programming-on-subsets-with-examples-explained
+    # Time complexity: O(2^N), Space complexity: O(2^N)
+    def makesquare_dp_topdown_2(self, matchsticks: List[int]) -> bool:
+        N = len(matchsticks)
+        side_length, rem = divmod(sum(matchsticks), 4)
+        if rem or max(matchsticks) > side_length:
             return False
-        sl = sm // 4
-        A.sort(reverse=True)
-        # sticks = [0] * 4
-        done = set()
 
-        def dfs(i, need):
-            if i == n:
-                return False
-            if i in done:
-                return dfs(i + 1, need)
-            if A[i] == need:
-                done.add(i)
-                return True
-            if A[i] < need:
-                done.add(i)
-                if dfs(i + 1, need - A[i]):
-                    return True
-                done.remove(i)
-                return dfs(i + 1, need)
-            return dfs(i + 1, need)
+        @lru_cache(maxsize=None)
+        def dfs(mask: int) -> int:
+            if mask == 0:
+                return 0
+            for i in range(N):
+                if mask & (1 << i):
+                    neib = dfs(mask ^ 1 << i)
+                    if neib >= 0 and neib + matchsticks[i] <= side_length:
+                        return (neib + matchsticks[i]) % side_length
+            return -1
 
-        for _ in range(4):
-            if not dfs(0, sl):
-                return False
-        return True
+        return dfs((1 << N) - 1) == 0
 
 
 SolutionFunc = Callable[[List[int]], bool]
@@ -166,7 +157,7 @@ def test_solution(matchsticks: List[int], expected: bool) -> None:
     sln = Solution()
     test_impl(sln.makesquare_dfs_recursive_TLE, matchsticks, expected)
     test_impl(sln.makesquare_dp_topdown, matchsticks, expected)
-    test_impl(sln.makesquare_dp_fastest, matchsticks, expected)
+    test_impl(sln.makesquare_dp_topdown_2, matchsticks, expected)
 
 
 if __name__ == "__main__":
