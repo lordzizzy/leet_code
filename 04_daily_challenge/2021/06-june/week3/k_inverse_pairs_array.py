@@ -38,7 +38,7 @@ class Solution:
                 return 1
             inv = 0
             for i in range(min(k, n - 1) + 1):
-                inv = (inv + dfs(n - 1, k - i)) % int(10e9 + 7)
+                inv += dfs(n - 1, k - i) % int(10e9 + 7)
             return inv
 
         return dfs(n, k)
