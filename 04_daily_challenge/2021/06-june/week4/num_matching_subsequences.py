@@ -27,11 +27,10 @@
 # 1 <= words[i].length <= 50
 # s and words[i] consist of only lowercase English letters.
 
-from collections import defaultdict
-from typing import Callable, DefaultDict, Iterator, List, Optional
-from termcolor import colored
-
 from bisect import bisect_left
+from typing import Callable, DefaultDict, Iterator, List, Optional
+
+from termcolor import colored
 
 
 class Solution:
