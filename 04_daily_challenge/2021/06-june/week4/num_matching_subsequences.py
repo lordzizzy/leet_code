@@ -89,7 +89,7 @@ class Solution:
         for c in s:
             for it in waiting.pop(c, ()):
                 waiting[next(it, None)].append(it)
-                
+
         return len(waiting[None])
 
 
@@ -115,8 +115,8 @@ def test_solution(s: str, words: List[str], expected: int) -> None:
             )
 
     sln = Solution()
-    # test_impl(sln.numMatchingSubseq_brute_force, s, words, expected)
-    # test_impl(sln.numMatchingSubseq_binary_search_dict, s, words, expected)
+    test_impl(sln.numMatchingSubseq_brute_force, s, words, expected)
+    test_impl(sln.numMatchingSubseq_binary_search_dict, s, words, expected)
     test_impl(sln.numMatchingSubseq_iterators_1, s, words, expected)
 
 
