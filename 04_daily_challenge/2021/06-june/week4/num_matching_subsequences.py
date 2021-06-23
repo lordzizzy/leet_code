@@ -28,7 +28,7 @@
 # s and words[i] consist of only lowercase English letters.
 
 from bisect import bisect_left
-from typing import Callable, DefaultDict, Iterator, List, Optional
+from typing import Callable, Counter, DefaultDict, Iterator, List, Optional
 
 from termcolor import colored
 
@@ -91,6 +91,18 @@ class Solution:
 
         return len(waiting[None])
 
+    def numMatchingSubseq_fastest(self, s: str, words: List[str]) -> int:
+        count = 0
+        for i, c in Counter(words).items():
+            indexj = 0
+            for j in i:
+                indexj = s.find(j, indexj) + 1
+                if not indexj:
+                    break
+            else:
+                count += c
+        return count
+
 
 SolutionFunc = Callable[[str, List[str]], int]
 
@@ -117,6 +129,7 @@ def test_solution(s: str, words: List[str], expected: int) -> None:
     test_impl(sln.numMatchingSubseq_brute_force, s, words, expected)
     test_impl(sln.numMatchingSubseq_binary_search_dict, s, words, expected)
     test_impl(sln.numMatchingSubseq_iterators_1, s, words, expected)
+    test_impl(sln.numMatchingSubseq_fastest, s, words, expected)
 
 
 if __name__ == "__main__":
