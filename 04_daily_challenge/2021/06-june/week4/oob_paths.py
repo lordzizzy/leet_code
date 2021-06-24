@@ -33,29 +33,29 @@ from termcolor import colored
 
 class Solution:
     def findPaths_brute_force_recursive(
-        self, m: int, n: int, maxMove: int, startRow: int, startColumn: int
+        self, m: int, n: int, maxMove: int, startRow: int, startCol: int
     ) -> int:
-        def find_oob(maxMove: int, startRow: int, startColumn: int) -> int:
-            if startRow < 0 or startRow == m or startColumn < 0 or startColumn == n:
+        def find_oob(maxMove: int, startRow: int, startCol: int) -> int:
+            if startRow < 0 or startRow == m or startCol < 0 or startCol == n:
                 return 1
             if maxMove == 0:
                 return 0
             return (
-                find_oob(maxMove - 1, startRow - 1, startColumn)
-                + find_oob(maxMove - 1, startRow + 1, startColumn)
-                + find_oob(maxMove - 1, startRow, startColumn - 1)
-                + find_oob(maxMove - 1, startRow, startColumn + 1)
+                find_oob(maxMove - 1, startRow - 1, startCol)
+                + find_oob(maxMove - 1, startRow + 1, startCol)
+                + find_oob(maxMove - 1, startRow, startCol - 1)
+                + find_oob(maxMove - 1, startRow, startCol + 1)
             )
 
         if maxMove == 0 and (
             startRow + maxMove < m
             or startRow - maxMove > 0
-            or startColumn + maxMove < n
-            or startColumn - maxMove > 0
+            or startCol + maxMove < n
+            or startCol - maxMove > 0
         ):
             return 0
 
-        res = find_oob(maxMove, startRow, startColumn)
+        res = find_oob(maxMove, startRow, startCol)
 
         return res
 
