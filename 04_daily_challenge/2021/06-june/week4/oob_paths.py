@@ -32,6 +32,9 @@ from termcolor import colored
 
 
 class Solution:
+    # let N = number of moves allowed
+    # Time complexity:  O(4^N)
+    # Space complexity: O(N), depth of the recursion tree = N
     def findPaths_brute_force_recursive(
         self, m: int, n: int, maxMove: int, startRow: int, startCol: int
     ) -> int:
