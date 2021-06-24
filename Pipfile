@@ -8,6 +8,7 @@ termcolor = "*"
 leetcode-shared = {editable = true, path = "./leetcode_shared"}
 typing-extensions = "*"
 typed-ast = "*"
+numpy = "*"
 
 [dev-packages]
 black = "*"
