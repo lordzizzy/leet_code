@@ -58,9 +58,7 @@ class Solution:
         ):
             return 0
 
-        res = find_oob(maxMove, startRow, startCol)
-
-        return res
+        return find_oob(maxMove, startRow, startCol) % int(1e9 + 7)
 
 
 SolutionFunc = Callable[[int, int, int, int, int], int]
