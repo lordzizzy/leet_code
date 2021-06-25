@@ -69,7 +69,7 @@ class Solution:
     # time than normal python lists
     # 400+ms vs 100+ms
     # TODO: find out why
-    def findPaths_dp_topdown_memoization_1(
+    def findPaths_dp_topdown_memoization_numpy(
         self, m: int, n: int, maxMove: int, startRow: int, startCol: int
     ) -> int:
         MAX = int(1e9 + 7)
@@ -147,7 +147,7 @@ def test_solution(
     )
 
     test_impl(
-        sln.findPaths_dp_topdown_memoization_1,
+        sln.findPaths_dp_topdown_memoization_numpy,
         m,
         n,
         maxMove,
