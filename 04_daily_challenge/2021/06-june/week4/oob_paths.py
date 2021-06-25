@@ -64,6 +64,40 @@ class Solution:
 
         return find_oob(maxMove, startRow, startCol) % MAX
 
+    def findPaths_dp_topdown_memoization(
+        self, m: int, n: int, maxMove: int, startRow: int, startCol: int
+    ) -> int:
+        MAX = int(1e9 + 7)
+        memo = [[[-1] * (maxMove + 1) for _ in range(n)] for _ in range(m)]
+
+        def find_oob(moves: int, i: int, j: int) -> int:
+            if i < 0 or i == m or j < 0 or j == n:
+                return 1
+            if moves == 0:
+                return 0
+
+            if memo[i][j][moves] >= 0:
+                return memo[i][j][moves]
+
+            u = find_oob(moves - 1, i + 1, j) % MAX
+            d = find_oob(moves - 1, i - 1, j) % MAX
+            l = find_oob(moves - 1, i, j - 1) % MAX
+            r = find_oob(moves - 1, i, j + 1) % MAX
+
+            memo[i][j][moves] = (u + d + l + r) % MAX
+
+            return memo[i][j][moves]
+
+        if maxMove == 0 and (
+            startRow + maxMove < m
+            or startRow - maxMove > 0
+            or startCol + maxMove < n
+            or startCol - maxMove > 0
+        ):
+            return 0
+
+        return find_oob(maxMove, startRow, startCol) % MAX
+
     # Surprisingly, using numpy in leetcode this way results in a much slower
     # time than normal python lists
     # 400+ms vs 100+ms
@@ -137,6 +171,16 @@ def test_solution(
     sln = Solution()
     test_impl(
         sln.findPaths_brute_force_recursive,
+        m,
+        n,
+        maxMove,
+        startRow,
+        startColumn,
+        expected,
+    )
+
+    test_impl(
+        sln.findPaths_dp_topdown_memoization,
         m,
         n,
         maxMove,
