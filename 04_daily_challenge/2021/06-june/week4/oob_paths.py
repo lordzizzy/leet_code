@@ -28,6 +28,8 @@
 
 from typing import Callable
 
+import numpy as np
+from numpy.typing import NDArray
 from termcolor import colored
 
 
@@ -38,17 +40,20 @@ class Solution:
     def findPaths_brute_force_recursive(
         self, m: int, n: int, maxMove: int, startRow: int, startCol: int
     ) -> int:
-        def find_oob(maxMove: int, startRow: int, startCol: int) -> int:
-            if startRow < 0 or startRow == m or startCol < 0 or startCol == n:
+        MAX = int(1e9 + 7)
+
+        def find_oob(moves: int, i: int, j: int) -> int:
+            if i < 0 or i == m or j < 0 or j == n:
                 return 1
-            if maxMove == 0:
+            if moves == 0:
                 return 0
-            return (
-                find_oob(maxMove - 1, startRow - 1, startCol)
-                + find_oob(maxMove - 1, startRow + 1, startCol)
-                + find_oob(maxMove - 1, startRow, startCol - 1)
-                + find_oob(maxMove - 1, startRow, startCol + 1)
-            )
+
+            u = find_oob(moves - 1, i + 1, j) % MAX
+            d = find_oob(moves - 1, i - 1, j) % MAX
+            l = find_oob(moves - 1, i, j - 1) % MAX
+            r = find_oob(moves - 1, i, j + 1) % MAX
+
+            return (u + d + l + r) % MAX
 
         if maxMove == 0 and (
             startRow + maxMove < m
@@ -58,7 +63,45 @@ class Solution:
         ):
             return 0
 
-        return find_oob(maxMove, startRow, startCol) % int(1e9 + 7)
+        return find_oob(maxMove, startRow, startCol) % MAX
+
+    # Surprisingly, using numpy in leetcode this way results in a much slower
+    # time than normal python lists
+    # 400+ms vs 100+ms
+    # TODO: find out why
+    def findPaths_dp_topdown_memoization_1(
+        self, m: int, n: int, maxMove: int, startRow: int, startCol: int
+    ) -> int:
+        MAX = int(1e9 + 7)
+        memo = np.full((m, n, maxMove + 1), -1, dtype="int64")
+
+        def find_oob(moves: int, i: int, j: int) -> int:
+            if i < 0 or i == m or j < 0 or j == n:
+                return 1
+            if moves == 0:
+                return 0
+
+            if memo[i][j][moves] >= 0:
+                return memo[i][j][moves]
+
+            u = find_oob(moves - 1, i + 1, j) % MAX
+            d = find_oob(moves - 1, i - 1, j) % MAX
+            l = find_oob(moves - 1, i, j - 1) % MAX
+            r = find_oob(moves - 1, i, j + 1) % MAX
+
+            memo[i][j][moves] = (u + d + l + r) % MAX
+
+            return memo[i][j][moves]
+
+        if maxMove == 0 and (
+            startRow + maxMove < m
+            or startRow - maxMove > 0
+            or startCol + maxMove < n
+            or startCol - maxMove > 0
+        ):
+            return 0
+
+        return find_oob(maxMove, startRow, startCol) % MAX
 
 
 SolutionFunc = Callable[[int, int, int, int, int], int]
@@ -103,7 +146,21 @@ def test_solution(
         expected,
     )
 
+    test_impl(
+        sln.findPaths_dp_topdown_memoization_1,
+        m,
+        n,
+        maxMove,
+        startRow,
+        startColumn,
+        expected,
+    )
+
 
 if __name__ == "__main__":
     test_solution(m=2, n=2, maxMove=2, startRow=0, startColumn=0, expected=6)
     test_solution(m=1, n=3, maxMove=3, startRow=0, startColumn=1, expected=12)
+    test_solution(m=10, n=5, maxMove=10, startRow=2, startColumn=3, expected=65396)
+
+    # murders bruteforce approach
+    # test_solution(m=35, n=5, maxMove=50, startRow=15, startColumn=3, expected=489927958)
