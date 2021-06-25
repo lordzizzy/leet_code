@@ -26,6 +26,7 @@
 # 0 <= startRow <= m
 # 0 <= startColumn <= n
 
+from functools import lru_cache
 from typing import Callable
 
 import numpy as np
@@ -136,6 +137,27 @@ class Solution:
 
         return find_oob(maxMove, startRow, startCol) % MAX
 
+    def findPaths_dp_topdown_memoization_lrucache(
+        self, m: int, n: int, maxMove: int, startRow: int, startCol: int
+    ) -> int:
+        MAX = int(1e9 + 7)
+
+        @lru_cache(maxsize=None)
+        def find_oob(moves: int, i: int, j: int) -> int:
+            if i < 0 or i == m or j < 0 or j == n:
+                return 1
+            if moves == 0:
+                return 0
+
+            u = find_oob(moves - 1, i + 1, j) % MAX
+            d = find_oob(moves - 1, i - 1, j) % MAX
+            l = find_oob(moves - 1, i, j - 1) % MAX
+            r = find_oob(moves - 1, i, j + 1) % MAX
+
+            return (u + d + l + r) % MAX
+
+        return find_oob(maxMove, startRow, startCol) % MAX
+
 
 SolutionFunc = Callable[[int, int, int, int, int], int]
 
@@ -191,6 +213,16 @@ def test_solution(
 
     test_impl(
         sln.findPaths_dp_topdown_memoization_numpy,
+        m,
+        n,
+        maxMove,
+        startRow,
+        startColumn,
+        expected,
+    )
+
+    test_impl(
+        sln.findPaths_dp_topdown_memoization_lrucache,
         m,
         n,
         maxMove,
