@@ -32,15 +32,28 @@ from typing import Callable
 import numpy as np
 from termcolor import colored
 
+MAX = int(1e9 + 7)
+
 
 class Solution:
+    def can_oob(
+        self, m: int, n: int, maxMove: int, startRow: int, startCol: int
+    ) -> bool:
+        return maxMove > 0 and not (
+            startRow + maxMove < m
+            and startRow - maxMove >= 0
+            and startCol + maxMove < n
+            and startCol - maxMove >= 0
+        )
+
     # let N = number of moves allowed
     # Time complexity:  O(4^N)
     # Space complexity: O(N), depth of the recursion tree = N
     def findPaths_brute_force_recursive(
         self, m: int, n: int, maxMove: int, startRow: int, startCol: int
     ) -> int:
-        MAX = int(1e9 + 7)
+        if not self.can_oob(m, n, maxMove, startRow, startCol):
+            return 0
 
         def find_oob(moves: int, i: int, j: int) -> int:
             if i < 0 or i == m or j < 0 or j == n:
@@ -55,20 +68,14 @@ class Solution:
 
             return (u + d + l + r) % MAX
 
-        if maxMove == 0 and (
-            startRow + maxMove < m
-            or startRow - maxMove > 0
-            or startCol + maxMove < n
-            or startCol - maxMove > 0
-        ):
-            return 0
-
         return find_oob(maxMove, startRow, startCol) % MAX
 
     def findPaths_dp_topdown_memoization(
         self, m: int, n: int, maxMove: int, startRow: int, startCol: int
     ) -> int:
-        MAX = int(1e9 + 7)
+        if not self.can_oob(m, n, maxMove, startRow, startCol):
+            return 0
+
         memo = [[[-1] * (maxMove + 1) for _ in range(n)] for _ in range(m)]
 
         def find_oob(moves: int, i: int, j: int) -> int:
@@ -89,14 +96,6 @@ class Solution:
 
             return memo[i][j][moves]
 
-        if maxMove == 0 and (
-            startRow + maxMove < m
-            or startRow - maxMove > 0
-            or startCol + maxMove < n
-            or startCol - maxMove > 0
-        ):
-            return 0
-
         return find_oob(maxMove, startRow, startCol) % MAX
 
     # Surprisingly, using numpy in leetcode this way results in a much slower
@@ -106,7 +105,9 @@ class Solution:
     def findPaths_dp_topdown_memoization_numpy(
         self, m: int, n: int, maxMove: int, startRow: int, startCol: int
     ) -> int:
-        MAX = int(1e9 + 7)
+        if not self.can_oob(m, n, maxMove, startRow, startCol):
+            return 0
+
         memo = np.full((m, n, maxMove + 1), -1, dtype="int64")
 
         def find_oob(moves: int, i: int, j: int) -> int:
@@ -127,20 +128,13 @@ class Solution:
 
             return memo[i][j][moves]
 
-        if maxMove == 0 and (
-            startRow + maxMove < m
-            or startRow - maxMove > 0
-            or startCol + maxMove < n
-            or startCol - maxMove > 0
-        ):
-            return 0
-
         return find_oob(maxMove, startRow, startCol) % MAX
 
     def findPaths_dp_topdown_memoization_lrucache(
         self, m: int, n: int, maxMove: int, startRow: int, startCol: int
     ) -> int:
-        MAX = int(1e9 + 7)
+        if not self.can_oob(m, n, maxMove, startRow, startCol):
+            return 0
 
         @lru_cache(maxsize=None)
         def find_oob(moves: int, i: int, j: int) -> int:
