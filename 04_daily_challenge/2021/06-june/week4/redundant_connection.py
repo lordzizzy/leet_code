@@ -37,6 +37,32 @@ from typing import Callable, DefaultDict, List, Set
 from termcolor import colored
 
 
+# Disjoint set union data structure class
+# for use to find cycles in undirected graphs
+class DSU:
+    def __init__(self) -> None:
+        self.parent = [n for n in range(1001)]
+        self.rank = [0] * 1001
+
+    def find(self, u: int) -> int:
+        if self.parent[u] != u:
+            self.parent[u] = self.find(self.parent[u])
+        return self.parent[u]
+
+    def union(self, u: int, v: int) -> bool:
+        uu, vv = self.find(u), self.find(v)
+        if uu == vv:
+            return False
+        elif self.rank[uu] < self.rank[vv]:
+            self.parent[uu] = vv
+        elif self.rank[uu] > self.rank[vv]:
+            self.parent[vv] = uu
+        else:
+            self.parent[vv] = uu
+            self.rank[uu] += 1
+        return True
+
+
 class Solution:
     # for each edge (u, v), traverse the graph with a depth-first search to see
     # if we can connect u to v. If we can, then it must be duplicate edge
@@ -68,6 +94,13 @@ class Solution:
 
     # TODO: iterative version of dfs
 
+    def findRedundantConnection_union_find(self, edges: List[List[int]]) -> List[int]:
+        dsu = DSU()
+        for u, v in edges:
+            if not dsu.union(u, v):
+                return [u, v]
+        return []
+
 
 SolutionFunc = Callable[[List[List[int]]], List[int]]
 
@@ -94,6 +127,7 @@ def test_solution(edges: List[List[int]], expected: List[int]) -> None:
 
     sln = Solution()
     test_impl(sln.findRedundantConnection_dfs_recursive, edges, expected)
+    test_impl(sln.findRedundantConnection_union_find, edges, expected)
 
 
 if __name__ == "__main__":
