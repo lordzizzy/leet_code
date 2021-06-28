@@ -10,7 +10,6 @@
 # Return the final string after all such duplicate removals have been made. It
 # can be proven that the answer is unique.
 
-
 # Example 1:
 # Input: s = "abbaca"
 # Output: "ca"
@@ -24,29 +23,52 @@
 # Input: s = "azxxzy"
 # Output: "ay"
 
-
 # Constraints:
 # 1 <= s.length <= 10⁵
 # s consists of lowercase English letters.
 
-from typing import Callable
+from typing import Callable, List
+
 from termcolor import colored
 
 
 class Solution:
-    def removeDuplicates_bruteforce_dfs(self, s: str) -> str:
-        def dfs(s: str) -> str:
+    def removeDuplicates_recusive(self, s: str) -> str:
+        def remove_duplicate(s: str) -> str:
             i = 0
             while i < len(s) - 1:
                 if s[i] == s[i + 1]:
                     l = s[:i]
                     r = s[i + 2 :]
                     ns = l + r
-                    return dfs(ns)
+                    return remove_duplicate(ns)
                 i += 1
             return s
 
-        return dfs(s)
+        return remove_duplicate(s)
+
+    # reference
+    # https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/discuss/294893/JavaC%2B%2BPython-Two-Pointers-and-Stack-Solution
+    def removeDuplicates_2ptrs(self, s: str) -> str:
+        i, N = 0, len(s)
+        arr = list(s)
+
+        for j in range(N):
+            arr[i] = arr[j]
+            if i > 0 and arr[i - 1] == arr[i]:
+                i -= 2
+            i += 1
+
+        return "".join(arr[:i])
+
+    def removeDuplicates_stack(self, s: str) -> str:
+        res: List[str] = []
+        for c in s:
+            if res and res[-1] == c:
+                res.pop()
+            else:
+                res.append(c)
+        return "".join(res)
 
 
 SolutionFunc = Callable[[str], str]
@@ -71,9 +93,12 @@ def test_solution(s: str, expected: str) -> None:
             )
 
     sln = Solution()
-    test_impl(sln.removeDuplicates_bruteforce_dfs, s, expected)
+    test_impl(sln.removeDuplicates_recusive, s, expected)
+    test_impl(sln.removeDuplicates_2ptrs, s, expected)
+    test_impl(sln.removeDuplicates_stack, s, expected)
 
 
 if __name__ == "__main__":
     test_solution(s="abbaca", expected="ca")
+    test_solution(s="xbbaca", expected="xaca")
     test_solution(s="azxxzy", expected="ay")
