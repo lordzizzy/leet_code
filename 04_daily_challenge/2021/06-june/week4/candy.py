@@ -74,6 +74,31 @@ class Solution:
 
         return ans
 
+    # Reference
+    # https://leetcode.com/problems/candy/discuss/135698/Simple-solution-with-one-pass-using-O(1)-space
+    # Time complexity: O(N), 1 pass
+    # Space complextiy: O(1), 3 variables: up, down, peaks
+    def candy_1pass_peaks(self, ratings: List[int]) -> int:
+        N = len(ratings)
+        up, down, peak = 0, 0, 0
+        ans = 1
+
+        for i in range(1, N):
+            if ratings[i - 1] < ratings[i]:
+                down = 0
+                up += 1
+                peak = up
+                ans += 1 + up
+            elif ratings[i - 1] == ratings[i]:
+                peak = up = down = 0
+                ans += 1
+            else:
+                up = 0
+                down += 1
+                ans += 1 + down + (-1 if peak >= down else 0)
+
+        return ans
+
 
 SolutionFunc = Callable[[List[int]], int]
 
@@ -99,6 +124,7 @@ def test_solution(ratings: List[int], expected: int) -> None:
     sln = Solution()
     test_impl(sln.candy_2_arrays, ratings, expected)
     test_impl(sln.candy_1_array, ratings, expected)
+    test_impl(sln.candy_1pass_peaks, ratings, expected)
 
 
 if __name__ == "__main__":
@@ -115,5 +141,5 @@ if __name__ == "__main__":
             34,
             1,
         ],
-        expected=16,
+        expected=14,
     )
