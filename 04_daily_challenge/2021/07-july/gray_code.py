@@ -48,16 +48,30 @@ class Solution:
             if n == 0:
                 arr.append(0)
                 return arr
-
             arr = generate(arr, n - 1)
-
             mask = 1 << (n - 1)
             for i in reversed(range(len(arr))):
                 arr.append(arr[i] | mask)
-
             return arr
 
         return generate(ans, n)
+
+    # Time complexity: O(2^N)
+    # Space complexity: O(1)
+    def grayCode_iterative_2loops(self, n: int) -> List[int]:
+        ans: List[int] = [0]
+
+        for i in range(1, n + 1):
+            mask = 1 << (i - 1)
+            for j in reversed(range(len(ans))):
+                ans.append(ans[j] | mask)
+
+        return ans
+
+    # Time complexity: O(2^N)
+    # Space complexity: O(1)
+    def grayCode_iterative_1loop_optimized(self, n: int) -> List[int]:
+        return [i ^ i >> 1 for i in range(1 << n)]
 
 
 SolutionFunc = Callable[[int], List[int]]
@@ -83,6 +97,8 @@ def test_solution(n: int, expected: List[int]) -> None:
 
     sln = Solution()
     test_impl(sln.grayCode_recursion, n, expected)
+    test_impl(sln.grayCode_iterative_2loops, n, expected)
+    test_impl(sln.grayCode_iterative_1loop_optimized, n, expected)
 
 
 if __name__ == "__main__":
