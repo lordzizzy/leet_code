@@ -17,6 +17,7 @@ def maxSubarraySum_bruteforce(arr: List[int]) -> int:
 
 
 # using kadane's algorithm:
+# kadane is pronounced as "ke"-"dain"
 # local_max[i] = max(arr[i], arr[i]+local_max[i-1])
 #
 # Time complexity: O(N)
