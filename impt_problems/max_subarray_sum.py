@@ -67,3 +67,4 @@ def test_solution(arr: List[int], expected: int) -> None:
 if __name__ == "__main__":
     test_solution(arr=[], expected=0)
     test_solution(arr=[-2, 1, -3, 4, -1, 2, 1, -5, 4], expected=6)
+    test_solution(arr=[1, 2, -3, 8], expected=8)
