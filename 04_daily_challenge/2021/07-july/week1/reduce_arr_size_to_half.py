@@ -53,7 +53,7 @@ class Solution:
     # Time complexity: O(N logN) * can be O(N) if we use bucket sort, refer to
     # https://leetcode.com/problems/top-k-frequent-elements/discuss/740374/Python-5-lines-O(n)-buckets-solution-explained.
     # Space complexity: O(N)
-    def minSetSize_counter(self, arr: List[int]) -> int:
+    def minSetSize_counter_and_sort(self, arr: List[int]) -> int:
         res, half = 0, len(arr) // 2
         c = Counter(arr)
         for i in sorted(c.values(), reverse=True):
@@ -86,7 +86,7 @@ def test_solution(arr: List[int], expected: int) -> None:
             )
 
     sln = Solution()
-    test_impl(sln.minSetSize_counter, arr, expected)
+    test_impl(sln.minSetSize_counter_and_sort, arr, expected)
 
 
 if __name__ == "__main__":
