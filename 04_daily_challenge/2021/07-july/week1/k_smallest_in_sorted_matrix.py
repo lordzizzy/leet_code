@@ -26,6 +26,9 @@
 # All the rows and columns of matrix are guaranteed to be sorted in non-decreasing order.
 # 1 <= k <= n²
 
+# reference
+# https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/discuss/301357/Java-0ms-(added-Python-and-C%2B%2B)%3A-Easy-to-understand-solutions-using-Heap-and-Binary-Search
+
 from bisect import bisect_right
 from heapq import heappop, heappush
 from typing import Callable, List, Tuple
