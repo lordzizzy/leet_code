@@ -87,7 +87,9 @@ def test_solution(nums: List[int], possible_results: PossibleResults) -> None:
     ) -> None:
         res = func(nums)
         res_list = bst.build_list(res)
-        if any(res_list == exp for exp in possible_results):
+        if any(
+            res_list == bst.build_list(bst.build_tree(exp)) for exp in possible_results
+        ):
             print(
                 colored(
                     f"PASSED {func.__name__} => Sorted array {nums} to height-balanced BST is {res_list}",
